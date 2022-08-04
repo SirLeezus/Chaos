@@ -1,0 +1,20 @@
+name: Chaos
+version: '${project.version}'
+main: lee.code.chaos.Chaos
+api-version: 1.19
+depend: [GoldmanCore, ProtocolLib]
+commands:
+  message:
+    description: Message a online player.
+    permission: chaos.command.message
+    aliases: [msg, tell, whisper]
+    usage: "/message &f<player> <message>"
+  reply:
+    description: Reply to a online player.
+    permission: chaos.command.reply
+    aliases: [r]
+    usage: "/reply &f<message>"
+  stats:
+    description: Check your stats or a target player's stats.
+    permission: chaos.command.stats
+    usage: "/stats &f<player>"
