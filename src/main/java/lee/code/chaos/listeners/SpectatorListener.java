@@ -5,6 +5,7 @@ import lee.code.chaos.Data;
 import lee.code.chaos.lists.GameState;
 import lee.code.chaos.lists.SpectatorItem;
 import lee.code.chaos.maps.MapData;
+import lee.code.chaos.menusystem.menus.KitMenu;
 import lee.code.chaos.menusystem.menus.TeamMenu;
 import lee.code.core.util.bukkit.BukkitUtils;
 import org.bukkit.Sound;
@@ -60,9 +61,14 @@ public class SpectatorListener implements Listener {
             if (data.getActiveMap().getData().getSpectators().contains(uuid)) {
                 e.setCancelled(true);
                 if (BukkitUtils.hasClickDelay(player)) return;
-                if (player.getInventory().getItemInMainHand().equals(SpectatorItem.TEAM_SELECTOR.getItem()) && !data.getGameState().equals(GameState.TRANSITIONING)) {
-                    new TeamMenu(data.getPlayerMU(uuid)).open();
-                    player.playSound(player.getLocation(), Sound.ENTITY_LLAMA_SWAG, 1, 1);
+                if (!data.getGameState().equals(GameState.TRANSITIONING)) {
+                    if (player.getInventory().getItemInMainHand().equals(SpectatorItem.TEAM_SELECTOR.getItem())) {
+                        new TeamMenu(data.getPlayerMU(uuid)).open();
+                        player.playSound(player.getLocation(), Sound.ENTITY_LLAMA_SWAG, 1, 1);
+                    } else if (player.getInventory().getItemInMainHand().equals(SpectatorItem.KIT_SELECTOR.getItem())) {
+                        new KitMenu(data.getPlayerMU(uuid)).open();
+                        player.playSound(player.getLocation(), Sound.ENTITY_LLAMA_SWAG, 1, 1);
+                    }
                 }
             }
         }

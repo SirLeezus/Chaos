@@ -1,15 +1,21 @@
 package lee.code.chaos;
 
+import lee.code.chaos.kits.Kit;
 import lee.code.chaos.lists.Lang;
 import lee.code.core.util.bukkit.BukkitUtils;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.util.UUID;
 
@@ -68,5 +74,20 @@ public class PU {
     public void setAttackDamage(ItemMeta meta, double amount) {
         AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), "generic.attackDamage", amount, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
         meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, modifier);
+    }
+
+    public Kit getPreviewItemKit(ItemStack item) {
+        Chaos plugin = Chaos.getPlugin();
+        ItemMeta itemMeta = item.getItemMeta();
+        PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, "key");
+        String kit = dataContainer.get(key, PersistentDataType.STRING);
+        if (kit != null) return plugin.getData().getKit(kit);
+        else return null;
+    }
+
+    public void setPreviewItemKitMeta(ItemMeta itemMeta, String key) {
+        PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
+        dataContainer.set(new NamespacedKey(Chaos.getPlugin(), "key"), PersistentDataType.STRING, key);
     }
 }

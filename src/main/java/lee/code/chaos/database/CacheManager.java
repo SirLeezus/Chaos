@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import lee.code.chaos.Chaos;
 import lee.code.chaos.PU;
 import lee.code.chaos.database.tables.PlayerTable;
+import lee.code.chaos.kits.Kit;
 import lee.code.core.util.bukkit.BukkitUtils;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -182,6 +183,16 @@ public class CacheManager {
 
     public String getRank(UUID uuid) {
         return getPlayerTable(uuid).getRank();
+    }
+
+    public void setKit(UUID uuid, String kit) {
+        PlayerTable playerTable = getPlayerTable(uuid);
+        playerTable.setKit(kit);
+        updatePlayerTable(playerTable);
+    }
+
+    public Kit getKit(UUID uuid) {
+        return Chaos.getPlugin().getData().getKit(getPlayerTable(uuid).getKit());
     }
 
 }

@@ -70,6 +70,7 @@ public class PermissionManager {
         defaultPerms.add("chaos.command.stats");
         defaultPerms.add("chaos.command.message");
         defaultPerms.add("chaos.command.reply");
+        defaultPerms.add("chaos.kit.default");
 
         // staff
         staffPerms.add("chaos.command.admin");

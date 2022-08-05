@@ -45,6 +45,8 @@ public enum Tool {
     DIAMOND_HOE(Material.DIAMOND_HOE, 1),
     NETHERITE_HOE(Material.NETHERITE_HOE, 1),
 
+    TRIDENT(Material.TRIDENT, 5),
+
     ;
 
     @Getter private final Material material;

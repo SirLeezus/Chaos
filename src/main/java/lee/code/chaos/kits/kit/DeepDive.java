@@ -12,21 +12,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Default extends Kit {
+public class DeepDive extends Kit {
 
     private final Map<Integer, ItemStack> kit = new HashMap<>();
     private final ItemStack lockedPreview;
     private final ItemStack unlockedPreview;
 
-    public Default() {
+    public DeepDive() {
         kit.put(-1, new ItemStack(Material.SHIELD, 1));
-        kit.put(0, Tool.IRON_SWORD.getItem());
-        kit.put(1, new ItemStack(Material.BOW, 1));
-        kit.put(2, new ItemStack(Material.ARROW, 30));
-        kit.put(3, new ItemStack(Material.COOKED_BEEF, 5));
-        kit.put(4, Tool.IRON_PICKAXE.getItem());
-        kit.put(5, Tool.IRON_AXE.getItem());
-        kit.put(6, new ItemStack(Material.OAK_PLANKS, 30));
+        kit.put(0, Tool.TRIDENT.getItem());
+        kit.put(1, Tool.IRON_AXE.getItem());
+        kit.put(2, new ItemStack(Material.COOKED_SALMON, 15));
+        kit.put(3, new ItemStack(Material.OAK_PLANKS, 30));
         ItemStack locked = BukkitUtils.getItem(Material.STRUCTURE_VOID,
                 Lang.MENU_KIT_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
                 Lang.MENU_KIT_LORE_LOCKED.getString(new String[] { BukkitUtils.parseValue(cost()) }),
@@ -37,7 +34,7 @@ public class Default extends Kit {
         locked.setItemMeta(lockedMeta);
         lockedPreview = locked;
 
-        ItemStack unlocked = BukkitUtils.getItem(Material.IRON_AXE,
+        ItemStack unlocked = BukkitUtils.getItem(Material.TRIDENT,
                 Lang.MENU_KIT_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
                 Lang.MENU_KIT_LORE_UNLOCKED.getString(null),
                 null,
@@ -50,7 +47,7 @@ public class Default extends Kit {
 
     @Override
     public String name() {
-        return "default";
+        return "deep_dive";
     }
 
     @Override
@@ -70,6 +67,6 @@ public class Default extends Kit {
 
     @Override
     public long cost() {
-        return 0;
+        return 1000;
     }
 }

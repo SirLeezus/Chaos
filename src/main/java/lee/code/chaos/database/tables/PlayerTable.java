@@ -44,6 +44,9 @@ public class PlayerTable {
     @DatabaseField(columnName = "rank", canBeNull = false)
     private String rank;
 
+    @DatabaseField(columnName = "kit", canBeNull = false)
+    private String kit;
+
     public PlayerTable(UUID player) {
         this.player = player;
         this.coins = 0;
@@ -55,5 +58,6 @@ public class PlayerTable {
         this.games = 0;
         this.perms = "0";
         this.rank = "0";
+        this.kit = "default";
     }
 }

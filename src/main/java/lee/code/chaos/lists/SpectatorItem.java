@@ -8,7 +8,8 @@ import org.bukkit.inventory.ItemStack;
 
 @AllArgsConstructor
 public enum SpectatorItem {
-    TEAM_SELECTOR(Material.COMPASS, "&e&lSelect Team", "&e> &6To pick a team right-click this while holding it."),
+    TEAM_SELECTOR(Material.COMPASS, "&e&lSelect Team", "&e> &aTo pick a team right-click this while holding it."),
+    KIT_SELECTOR(Material.CHEST, "&6&lSelect Kit", "&e> &aTo pick a kit right-click this while holding it."),
 
     ;
 

@@ -12,6 +12,6 @@ import java.util.UUID;
 public class PlayerMU {
 
     private final UUID owner;
-    @Getter @Setter private int page;
+    @Getter @Setter private int kitPage;
     public Player getOwner() { return Bukkit.getPlayer(owner); }
 }

@@ -2,7 +2,7 @@ package lee.code.chaos;
 
 import lee.code.chaos.database.CacheManager;
 import lee.code.chaos.kits.Kit;
-import lee.code.chaos.kits.kit.Default;
+import lee.code.chaos.kits.kit.*;
 import lee.code.chaos.lists.GameState;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.managers.GameManager;
@@ -50,7 +50,6 @@ public class Data {
     private final ConcurrentHashMap<UUID, Double> playerHeathTracker = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, UUID> lastPlayerDamage = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Kit> gameKits = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<UUID, Kit> selectedKit = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, ScoreData> playerScore = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, UUID> lastReplier = new ConcurrentHashMap<>();
 
@@ -66,9 +65,8 @@ public class Data {
     public UUID getLastPlayerDamage(UUID uuid) { return lastPlayerDamage.getOrDefault(uuid, null); }
     public void removeLastPlayerDamage(UUID uuid) { lastPlayerDamage.remove(uuid); }
 
-    public void setSelectedKit(UUID uuid, Kit kit) { selectedKit.put(uuid, kit);}
-    public Kit getSelectedKit(UUID uuid) { return selectedKit.getOrDefault(uuid, gameKits.get("default")); }
-    public void removeSelectedKit(UUID uuid) { selectedKit.remove(uuid); }
+    public List<Kit> getKits() { return new ArrayList<>(gameKits.values()); }
+    public Kit getKit(String kit) { return gameKits.get(kit); }
 
     public UUID getLastReplier(UUID uuid) { return lastReplier.get(uuid); }
     public void setLastReplier(UUID player, UUID target) { lastReplier.put(player, target); }
@@ -178,6 +176,14 @@ public class Data {
 
         Kit defaultKit = new Default();
         gameKits.put(defaultKit.name(), defaultKit);
+        Kit demolitionist = new Demolitionist();
+        gameKits.put(demolitionist.name(), demolitionist);
+        Kit deepDive = new DeepDive();
+        gameKits.put(deepDive.name(), deepDive);
+        Kit constructionWorker = new ConstructionWorker();
+        gameKits.put(constructionWorker.name(), constructionWorker);
+        Kit heavyHitter = new HeavyHitter();
+        gameKits.put(heavyHitter.name(), heavyHitter);
     }
 
     public int getNextMap() {

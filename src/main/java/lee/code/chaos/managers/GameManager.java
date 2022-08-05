@@ -156,6 +156,7 @@ public class GameManager {
 
     private void loadSpectatorItems(Player player) {
         player.getInventory().setItem(4, SpectatorItem.TEAM_SELECTOR.getItem());
+        player.getInventory().setItem(6, SpectatorItem.KIT_SELECTOR.getItem());
         player.updateInventory();
     }
 
@@ -271,8 +272,7 @@ public class GameManager {
     }
 
     private void loadKit(Player player) {
-        Data data = Chaos.getPlugin().getData();
-        Kit kit = data.getSelectedKit(player.getUniqueId());
+        Kit kit = Chaos.getPlugin().getCacheManager().getKit(player.getUniqueId());
         for (Map.Entry<Integer, ItemStack> kItem : kit.inventory().entrySet()) {
             int slot = kItem.getKey();
             ItemStack item = kItem.getValue();
