@@ -8,22 +8,22 @@ import lee.code.chaos.lists.Lang;
 import lee.code.chaos.lists.Setting;
 import lee.code.chaos.managers.GameManager;
 import lee.code.chaos.maps.MapData;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class GameListener implements Listener {
@@ -114,6 +114,61 @@ public class GameListener implements Listener {
                 e.setCancelled(isSafeLocation(player.getLocation()));
             } else e.setCancelled(true);
         }
+    }
+
+    @EventHandler
+    public void onPistonRetract(BlockPistonRetractEvent e) {
+        List<Block> blocks = new ArrayList<>(e.getBlocks());
+        if (blocks.size() > 0) {
+            Block lastBlock = blocks.get(blocks.size() - 1);
+            lastBlock = lastBlock.getRelative(e.getDirection());
+            blocks.add(lastBlock);
+        }
+        for (Block block : blocks) {
+            if (block.getType().equals(Material.RED_WOOL)) e.setCancelled(true);
+            else if (block.getType().equals(Material.BLUE_WOOL)) e.setCancelled(true);
+            else if (isSafeLocation(block.getLocation())) e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPistonExtend(BlockPistonExtendEvent e) {
+        List<Block> blocks = new ArrayList<>(e.getBlocks());
+        if (blocks.size() > 0) {
+            Block lastBlock = blocks.get(blocks.size() - 1);
+            lastBlock = lastBlock.getRelative(e.getDirection());
+            blocks.add(lastBlock);
+        }
+        for (Block block : blocks) {
+            if (block.getType().equals(Material.RED_WOOL)) e.setCancelled(true);
+            else if (block.getType().equals(Material.BLUE_WOOL)) e.setCancelled(true);
+            else if (isSafeLocation(block.getLocation())) e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onFlow(BlockFromToEvent e) {
+        Block block = e.getBlock();
+        if (block.getType().equals(Material.WATER) || block.getType().equals(Material.LAVA)) {
+            if (isSafeLocation(e.getToBlock().getLocation())) e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBlockBurn(BlockBurnEvent e) {
+        Block block = e.getBlock();
+        if (isSafeLocation(block.getLocation()) || block.getType().equals(Material.RED_WOOL) || block.getType().equals(Material.BLUE_WOOL)) e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onBlockChange(EntityChangeBlockEvent e) {
+        Block block = e.getBlock();
+        if (isSafeLocation(block.getLocation()) || block.getType().equals(Material.RED_WOOL) || block.getType().equals(Material.BLUE_WOOL)) e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onExplodeEvent(EntityExplodeEvent e) {
+        e.blockList().removeIf(block -> isSafeLocation(block.getLocation()) || block.getType().equals(Material.RED_WOOL) || block.getType().equals(Material.BLUE_WOOL));
     }
 
     private boolean isSafeLocation(Location location) {

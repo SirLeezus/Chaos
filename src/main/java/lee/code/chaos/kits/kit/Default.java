@@ -18,8 +18,9 @@ public class Default extends Kit {
         kit.put(1, new ItemStack(Material.BOW, 1));
         kit.put(2, new ItemStack(Material.ARROW, 30));
         kit.put(3, new ItemStack(Material.COOKED_BEEF, 5));
-        kit.put(4, Tool.IRON_AXE.getItem());
-        kit.put(5, new ItemStack(Material.OAK_PLANKS, 30));
+        kit.put(4, Tool.IRON_PICKAXE.getItem());
+        kit.put(5, Tool.IRON_AXE.getItem());
+        kit.put(6, new ItemStack(Material.OAK_PLANKS, 30));
     }
 
     @Override
