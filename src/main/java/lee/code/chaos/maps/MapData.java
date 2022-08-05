@@ -35,7 +35,8 @@ public class MapData {
     public void removeSpectator(UUID uuid) { spectators.remove(uuid); }
 
     public GameTeam getTeam(UUID uuid) {
-        if (blueTeam.contains(uuid)) return GameTeam.BLUE;
+        if (spectators.contains(uuid)) return GameTeam.SPECTATOR;
+        else if (blueTeam.contains(uuid)) return GameTeam.BLUE;
         else if (redTeam.contains(uuid)) return GameTeam.RED;
         else return GameTeam.SPECTATOR;
     }

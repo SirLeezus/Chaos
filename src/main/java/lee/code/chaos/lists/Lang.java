@@ -32,7 +32,7 @@ public enum Lang {
     CYCLING_MAP("&eCycling map in &6{0}s&e!"),
     CYCLING_MAP_STARTED("&eCycling map process has started!"),
     BROKE_WOOL("&aThe player {0}{1} &abroke a {2} Wool &ablock! {3}({4}/{5})"),
-    TABLIST_HEADER("&#228B22▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n&r&c\uD83D\uDD25 &#FFA33A&lChaos &9\uD83D\uDD25\n&#228B22▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"),
+    TABLIST_HEADER("&#228B22▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n&#FFA33A&lJourney Chaos\n&#228B22▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"),
     TABLIST_FOOTER("\n&#228B22&lOnline&7: &#4dc462{0}"),
     PLAYER_KILLED_TARGET("&eThe player {0}{1} &ekilled {2}{3}&e."),
     PLAYER_DIED("&eThe player {0}{1} &edied."),

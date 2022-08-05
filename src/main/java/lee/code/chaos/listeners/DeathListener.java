@@ -6,20 +6,29 @@ import lee.code.chaos.lists.GameTeam;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.managers.GameManager;
 import lee.code.chaos.maps.MapData;
-import lee.code.core.util.bukkit.BukkitUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.TNTPrimed;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.UUID;
 
 public class DeathListener implements Listener {
+
+    @EventHandler
+    public void onVoidDeath(PlayerMoveEvent e) {
+        if (e.getTo().getBlockY() <= 60) {
+            Player player = e.getPlayer();
+            respawnPlayer(player, null);
+        }
+    }
 
     @EventHandler
     public void onDeathByEntity(EntityDamageByEntityEvent e) {
@@ -27,33 +36,27 @@ public class DeathListener implements Listener {
             Data data = Chaos.getPlugin().getData();
             UUID uuid = player.getUniqueId();
             if (!data.getActiveMap().getData().getSpectators().contains(uuid)) {
-                if (e.getDamage() >= player.getHealth()) {
-                    e.setCancelled(true);
-                    Player attacker = Bukkit.getPlayer(data.getLastPlayerDamage(uuid));
-                    respawnPlayer(player, attacker);
-                    data.removeLastPlayerDamage(uuid);
-                } else {
-                    Player attacker = getLastAttacker(e.getDamager());
-                    if (attacker != null) {
-                        data.setLastPlayerDamage(player.getUniqueId(), attacker.getUniqueId());
-                    }
+                Player attacker = getLastAttacker(e.getDamager());
+                if (attacker != null) {
+                    data.setLastPlayerDamage(player.getUniqueId(), attacker.getUniqueId());
                 }
             }
         }
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.MONITOR)
     public void onDeath(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player player) {
-            Data data = Chaos.getPlugin().getData();
-            UUID uuid = player.getUniqueId();
-            if (!data.getActiveMap().getData().getSpectators().contains(uuid)) {
-                if (e.getDamage() >= player.getHealth() || e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
-                    e.setCancelled(true);
-                    if (BukkitUtils.hasClickDelay(player)) return;
-                    Player attacker = Bukkit.getPlayer(data.getLastPlayerDamage(uuid));
-                    respawnPlayer(player, attacker);
-                    data.removeLastPlayerDamage(uuid);
+            if (!e.isCancelled()) {
+                Data data = Chaos.getPlugin().getData();
+                UUID uuid = player.getUniqueId();
+                if (!data.getActiveMap().getData().getSpectators().contains(uuid)) {
+                    if (e.getDamage() >= player.getHealth() && !e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
+                        e.setCancelled(true);
+                        Player attacker = Bukkit.getPlayer(data.getLastPlayerDamage(uuid));
+                        respawnPlayer(player, attacker);
+                        data.removeLastPlayerDamage(uuid);
+                    }
                 }
             }
         }
@@ -92,10 +95,7 @@ public class DeathListener implements Listener {
                 data.addPlayerDeath(player.getUniqueId());
                 gameManager.respawnPlayer(player);
             }
-            case SPECTATOR -> {
-                Bukkit.getServer().sendMessage(Lang.PREFIX.getComponent(null).append(Lang.PLAYER_DIED.getComponent(new String[] { Lang.SPECTATOR_COLOR.getString(null), player.getName() })));
-                gameManager.respawnPlayer(player);
-            }
+            case SPECTATOR -> player.teleportAsync(map.getSpawn());
         }
     }
 

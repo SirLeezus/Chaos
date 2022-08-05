@@ -167,12 +167,21 @@ public class GameManager {
             player.getInventory().remove(drop);
             player.getWorld().dropItemNaturally(player.getLocation(), drop);
         }
-        player.setHealth(20);
-        player.setFoodLevel(20);
-        player.setFireTicks(0);
+        player.getWorld().dropItemNaturally(player.getLocation(), player.getInventory().getItemInOffHand());
+        player.getInventory().getItemInOffHand().setType(Material.AIR);
         switch (map.getTeam(uuid)) {
-            case BLUE -> player.teleportAsync(map.getBlueSpawn()).thenAccept(result -> loadKit(player));
-            case RED -> player.teleportAsync(map.getRedSpawn()).thenAccept(result -> loadKit(player));
+            case BLUE -> player.teleportAsync(map.getBlueSpawn()).thenAccept(result -> {
+                loadKit(player);
+                player.setHealth(20);
+                player.setFoodLevel(20);
+                player.setFireTicks(0);
+            });
+            case RED -> player.teleportAsync(map.getRedSpawn()).thenAccept(result -> {
+                loadKit(player);
+                player.setHealth(20);
+                player.setFoodLevel(20);
+                player.setFireTicks(0);
+            });
         }
     }
 
@@ -267,7 +276,8 @@ public class GameManager {
         for (Map.Entry<Integer, ItemStack> kItem : kit.inventory().entrySet()) {
             int slot = kItem.getKey();
             ItemStack item = kItem.getValue();
-            player.getInventory().setItem(slot, item);
+            if (item.getType().equals(Material.SHIELD)) player.getInventory().setItemInOffHand(item);
+            else player.getInventory().setItem(slot, item);
         }
         player.updateInventory();
     }

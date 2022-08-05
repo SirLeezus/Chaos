@@ -10,6 +10,7 @@ import lee.code.chaos.database.CacheManager;
 import lee.code.chaos.database.DatabaseManager;
 import lee.code.chaos.listeners.*;
 import lee.code.chaos.managers.GameManager;
+import lee.code.chaos.managers.PermissionManager;
 import lee.code.chaos.managers.WorldManager;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -22,6 +23,7 @@ public class Chaos extends JavaPlugin {
 
     @Getter private WorldManager worldManager;
     @Getter private DatabaseManager databaseManager;
+    @Getter private PermissionManager permissionManager;
     @Getter private CacheManager cacheManager;
     @Getter private GameManager gameManager;
     @Getter private Data data;
@@ -31,12 +33,14 @@ public class Chaos extends JavaPlugin {
     public void onEnable() {
         this.pU = new PU();
         this.worldManager = new WorldManager();
+        this.permissionManager = new PermissionManager();
         this.data = new Data();
         this.gameManager = new GameManager();
         this.databaseManager = new DatabaseManager();
         this.cacheManager = new CacheManager();
 
         databaseManager.initialize();
+        permissionManager.loadPerms();
         data.load();
         registerListeners();
         registerCommands();
@@ -59,6 +63,7 @@ public class Chaos extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new DeathListener(), this);
         getServer().getPluginManager().registerEvents(new SignListener(), this);
         getServer().getPluginManager().registerEvents(new ChatListener(), this);
+        getServer().getPluginManager().registerEvents(new CommandTabListener(), this);
     }
 
     private void registerCommands() {

@@ -16,18 +16,23 @@ import lee.code.chaos.maps.map.ForgottenTowers;
 import lee.code.chaos.maps.map.IceAge;
 import lee.code.chaos.maps.map.LastDestination;
 import lee.code.chaos.menusystem.PlayerMU;
+import lee.code.chaos.recipes.Tool;
+import lee.code.chaos.recipes.CraftingRecipe;
 import lee.code.core.util.bukkit.BukkitUtils;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.*;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static org.bukkit.Bukkit.getServer;
 
 public class Data {
 
@@ -37,6 +42,8 @@ public class Data {
     @Getter private Map activeMap;
     @Setter @Getter private GameState gameState;
     @Getter @Setter private int teamNumber = 0;
+
+    @Getter private final List<NamespacedKey> recipeKeys = new ArrayList<>();
 
     private final ConcurrentHashMap<UUID, PlayerMU> playerMUList = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, BoardManager> activeBoardPackets = new ConcurrentHashMap<>();
@@ -131,6 +138,36 @@ public class Data {
         loadNextMap(true);
         scheduleTabListUpdater();
         scheduleHeathChecker();
+
+        //remove recipes
+        List<Material> removedRecipes = new ArrayList<>(EnumSet.allOf(Tool.class).stream().map(Tool::getMaterial).toList());
+        Iterator<Recipe> it = Bukkit.getServer().recipeIterator();
+        Recipe recipe;
+        while (it.hasNext()) {
+            recipe = it.next();
+            if (recipe != null) {
+                Material material = recipe.getResult().getType();
+                if (removedRecipes.contains(material) || material.equals(Material.RED_WOOL) || material.equals(Material.BLUE_WOOL)) {
+                    it.remove();
+                }
+            }
+        }
+
+        //custom recipes
+        for (String sRecipe : EnumSet.allOf(CraftingRecipe.class).stream().map(CraftingRecipe::name).toList()) {
+            CraftingRecipe.valueOf(sRecipe).registerRecipe();
+        }
+
+        it.forEachRemaining(dRecipe -> {
+            if (dRecipe instanceof ShapelessRecipe shapelessRecipe) recipeKeys.add(shapelessRecipe.getKey());
+            else if (dRecipe instanceof ShapedRecipe shapedRecipe) recipeKeys.add(shapedRecipe.getKey());
+            else if (dRecipe instanceof BlastingRecipe shapedRecipe) recipeKeys.add(shapedRecipe.getKey());
+            else if (dRecipe instanceof CampfireRecipe shapedRecipe) recipeKeys.add(shapedRecipe.getKey());
+            else if (dRecipe instanceof FurnaceRecipe shapedRecipe) recipeKeys.add(shapedRecipe.getKey());
+            else if (dRecipe instanceof SmithingRecipe shapedRecipe) recipeKeys.add(shapedRecipe.getKey());
+            else if (dRecipe instanceof SmokingRecipe shapedRecipe) recipeKeys.add(shapedRecipe.getKey());
+            else if (dRecipe instanceof StonecuttingRecipe shapedRecipe) recipeKeys.add(shapedRecipe.getKey());
+        });
     }
 
     private void loadData() {
@@ -198,7 +235,7 @@ public class Data {
         World world = Bukkit.getWorld(name);
         if (world != null) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                Bukkit.getServer().unloadWorld(world, false);
+                getServer().unloadWorld(world, false);
                 plugin.getWorldManager().deleteWorldFolder(new File("./" + name));
             },100L);
         }
@@ -207,7 +244,7 @@ public class Data {
     private void scheduleTabListUpdater() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(Chaos.getPlugin(), () -> {
             if (!Bukkit.getOnlinePlayers().isEmpty()) {
-                Bukkit.getServer().sendPlayerListHeaderAndFooter(Lang.TABLIST_HEADER.getComponent(null), Lang.TABLIST_FOOTER.getComponent(new String[] { String.valueOf(BukkitUtils.getOnlinePlayers().size()) }));
+                getServer().sendPlayerListHeaderAndFooter(Lang.TABLIST_HEADER.getComponent(null), Lang.TABLIST_FOOTER.getComponent(new String[] { String.valueOf(BukkitUtils.getOnlinePlayers().size()) }));
             }
         }, 10, 40);
     }

@@ -5,7 +5,11 @@ import lee.code.core.util.bukkit.BukkitUtils;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.Bukkit;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.UUID;
 
@@ -59,5 +63,10 @@ public class PU {
     private void playLevelUpSound(Player player) {
         Sound sound = Sound.sound(Key.key("entity.evoker.prepare_summon"), Sound.Source.PLAYER, 1f,1);
         player.playSound(sound, Sound.Emitter.self());
+    }
+
+    public void setAttackDamage(ItemMeta meta, double amount) {
+        AttributeModifier modifier = new AttributeModifier(UUID.randomUUID(), "generic.attackDamage", amount, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND);
+        meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, modifier);
     }
 }

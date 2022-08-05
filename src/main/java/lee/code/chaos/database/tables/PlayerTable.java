@@ -38,6 +38,12 @@ public class PlayerTable {
     @DatabaseField(columnName = "games", canBeNull = false)
     private int games;
 
+    @DatabaseField(columnName = "perms", canBeNull = false)
+    private String perms;
+
+    @DatabaseField(columnName = "rank", canBeNull = false)
+    private String rank;
+
     public PlayerTable(UUID player) {
         this.player = player;
         this.coins = 0;
@@ -47,5 +53,7 @@ public class PlayerTable {
         this.longestKillStreak = 0;
         this.woolBroken = 0;
         this.games = 0;
+        this.perms = "0";
+        this.rank = "0";
     }
 }
