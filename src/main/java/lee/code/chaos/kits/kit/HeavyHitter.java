@@ -1,6 +1,7 @@
 package lee.code.chaos.kits.kit;
 
 import lee.code.chaos.Chaos;
+import lee.code.chaos.PU;
 import lee.code.chaos.kits.Kit;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.recipes.Tool;
@@ -19,17 +20,19 @@ public class HeavyHitter extends Kit {
     private final ItemStack unlockedPreview;
 
     public HeavyHitter() {
+        PU pu = Chaos.getPlugin().getPU();
         kit.put(-1, new ItemStack(Material.SHIELD, 1));
         kit.put(0, Tool.DIAMOND_SWORD.getItem());
         kit.put(1, new ItemStack(Material.GOLDEN_APPLE, 1));
-        kit.put(2, new ItemStack(Material.OAK_PLANKS, 30));
+        kit.put(2, Tool.IRON_AXE.getItem());
+        kit.put(3, new ItemStack(Material.OAK_PLANKS, 30));
         ItemStack locked = BukkitUtils.getItem(Material.STRUCTURE_VOID,
                 Lang.MENU_KIT_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
                 Lang.MENU_KIT_LORE_LOCKED.getString(new String[] { BukkitUtils.parseValue(cost()) }),
                 null,
                 true);
         ItemMeta lockedMeta = locked.getItemMeta();
-        Chaos.getPlugin().getPU().setPreviewItemKitMeta(lockedMeta, name());
+        pu.setPreviewItemKitMeta(lockedMeta, name());
         locked.setItemMeta(lockedMeta);
         lockedPreview = locked;
 
@@ -39,7 +42,7 @@ public class HeavyHitter extends Kit {
                 null,
                 true);
         ItemMeta unlockedMeta = unlocked.getItemMeta();
-        Chaos.getPlugin().getPU().setPreviewItemKitMeta(unlockedMeta, name());
+        pu.setPreviewItemKitMeta(unlockedMeta, name());
         unlocked.setItemMeta(unlockedMeta);
         unlockedPreview = unlocked;
     }

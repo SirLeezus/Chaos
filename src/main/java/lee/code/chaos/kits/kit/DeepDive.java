@@ -1,11 +1,13 @@
 package lee.code.chaos.kits.kit;
 
 import lee.code.chaos.Chaos;
+import lee.code.chaos.PU;
 import lee.code.chaos.kits.Kit;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.recipes.Tool;
 import lee.code.core.util.bukkit.BukkitUtils;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -19,10 +21,15 @@ public class DeepDive extends Kit {
     private final ItemStack unlockedPreview;
 
     public DeepDive() {
+        PU pu = Chaos.getPlugin().getPU();
         kit.put(-1, new ItemStack(Material.SHIELD, 1));
-        kit.put(0, Tool.TRIDENT.getItem());
-        kit.put(1, Tool.IRON_AXE.getItem());
-        kit.put(2, new ItemStack(Material.COOKED_SALMON, 15));
+        ItemStack trident = Tool.TRIDENT.getItem();
+        ItemMeta tridentMeta = trident.getItemMeta();
+        tridentMeta.addEnchant(Enchantment.LOYALTY, 3, false);
+        trident.setItemMeta(tridentMeta);
+        kit.put(0, trident);
+        kit.put(1, new ItemStack(Material.COOKED_SALMON, 15));
+        kit.put(2, Tool.IRON_AXE.getItem());
         kit.put(3, new ItemStack(Material.OAK_PLANKS, 30));
         ItemStack locked = BukkitUtils.getItem(Material.STRUCTURE_VOID,
                 Lang.MENU_KIT_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
@@ -30,7 +37,7 @@ public class DeepDive extends Kit {
                 null,
                 true);
         ItemMeta lockedMeta = locked.getItemMeta();
-        Chaos.getPlugin().getPU().setPreviewItemKitMeta(lockedMeta, name());
+        pu.setPreviewItemKitMeta(lockedMeta, name());
         locked.setItemMeta(lockedMeta);
         lockedPreview = locked;
 
@@ -40,7 +47,7 @@ public class DeepDive extends Kit {
                 null,
                 true);
         ItemMeta unlockedMeta = unlocked.getItemMeta();
-        Chaos.getPlugin().getPU().setPreviewItemKitMeta(unlockedMeta, name());
+        pu.setPreviewItemKitMeta(unlockedMeta, name());
         unlocked.setItemMeta(unlockedMeta);
         unlockedPreview = unlocked;
     }

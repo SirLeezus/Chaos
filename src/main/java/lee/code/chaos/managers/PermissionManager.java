@@ -36,7 +36,7 @@ public class PermissionManager {
             }
             for (String perm : defaultPerms) attachment.setPermission(perm, true);
             for (String perm : cacheManager.getPerms(uuid)) attachment.setPermission(perm, true);
-        }
+        } else for (String perm : defaultPerms) attachment.setPermission(perm, true);
 
         player.recalculatePermissions();
         player.updateCommands();
@@ -64,13 +64,16 @@ public class PermissionManager {
         defaultPerms.add("bukkit.command.ping");
         defaultPerms.add("allow.ride.llama");
         defaultPerms.add("allow.ride.snow_golem");
-        defaultPerms.add("allow.special.snow_golem");
+        defaultPerms.add("allow.ride.iron_golem");
+        defaultPerms.add("allow.ride.dolphin");
+        defaultPerms.add("allow.special.dolphin");
 
         // chaos
         defaultPerms.add("chaos.command.stats");
         defaultPerms.add("chaos.command.message");
         defaultPerms.add("chaos.command.reply");
         defaultPerms.add("chaos.kit.default");
+        defaultPerms.add("chaos.command.kits");
 
         // staff
         staffPerms.add("chaos.command.admin");

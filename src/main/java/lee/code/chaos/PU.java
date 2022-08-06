@@ -2,10 +2,12 @@ package lee.code.chaos;
 
 import lee.code.chaos.kits.Kit;
 import lee.code.chaos.lists.Lang;
+import lee.code.chaos.maps.MapData;
 import lee.code.core.util.bukkit.BukkitUtils;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -89,5 +91,17 @@ public class PU {
     public void setPreviewItemKitMeta(ItemMeta itemMeta, String key) {
         PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
         dataContainer.set(new NamespacedKey(Chaos.getPlugin(), "key"), PersistentDataType.STRING, key);
+    }
+
+    public boolean isSafeLocation(Location location) {
+        MapData map = Chaos.getPlugin().getData().getActiveMap().getData();
+        Location redSpawn = map.getRedSpawn();
+        Location blueSpawn = map.getBlueSpawn();
+        Location gameSpawn = map.getSpawn();
+        int radius = 5;
+        boolean red = location.distanceSquared(redSpawn) <= radius * radius;
+        boolean blue = location.distanceSquared(blueSpawn) <= radius * radius;
+        boolean spawn = location.distanceSquared(gameSpawn) <= radius * radius;
+        return red || blue || spawn;
     }
 }

@@ -18,3 +18,7 @@ commands:
     description: Check your stats or a target player's stats.
     permission: chaos.command.stats
     usage: "/stats &f<player>"
+  kits:
+    description: Open the kit menu.
+    permission: chaos.command.kits
+    usage: "/kits"

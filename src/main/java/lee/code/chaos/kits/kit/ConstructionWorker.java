@@ -1,6 +1,7 @@
 package lee.code.chaos.kits.kit;
 
 import lee.code.chaos.Chaos;
+import lee.code.chaos.PU;
 import lee.code.chaos.kits.Kit;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.recipes.Tool;
@@ -19,11 +20,12 @@ public class ConstructionWorker extends Kit {
     private final ItemStack unlockedPreview;
 
     public ConstructionWorker() {
+        PU pu = Chaos.getPlugin().getPU();
         kit.put(-1, new ItemStack(Material.SHIELD, 1));
-        kit.put(0, Tool.IRON_AXE.getItem());
+        kit.put(0, new ItemStack(Material.COOKED_BEEF, 15));
         kit.put(1, Tool.IRON_PICKAXE.getItem());
-        kit.put(2, new ItemStack(Material.COOKED_BEEF, 15));
-        kit.put(3, new ItemStack(Material.BRICKS, 64));
+        kit.put(2, new ItemStack(Material.BRICKS, 64));
+        kit.put(3, Tool.IRON_AXE.getItem());
         kit.put(4, new ItemStack(Material.OAK_PLANKS, 64));
         kit.put(5, new ItemStack(Material.ACACIA_PLANKS, 64));
         kit.put(6, new ItemStack(Material.WARPED_PLANKS, 64));
@@ -35,7 +37,7 @@ public class ConstructionWorker extends Kit {
                 null,
                 true);
         ItemMeta lockedMeta = locked.getItemMeta();
-        Chaos.getPlugin().getPU().setPreviewItemKitMeta(lockedMeta, name());
+        pu.setPreviewItemKitMeta(lockedMeta, name());
         locked.setItemMeta(lockedMeta);
         lockedPreview = locked;
 
@@ -45,7 +47,7 @@ public class ConstructionWorker extends Kit {
                 null,
                 true);
         ItemMeta unlockedMeta = unlocked.getItemMeta();
-        Chaos.getPlugin().getPU().setPreviewItemKitMeta(unlockedMeta, name());
+        pu.setPreviewItemKitMeta(unlockedMeta, name());
         unlocked.setItemMeta(unlockedMeta);
         unlockedPreview = unlocked;
     }

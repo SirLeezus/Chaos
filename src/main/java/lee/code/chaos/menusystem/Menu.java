@@ -20,6 +20,8 @@ public abstract class Menu implements InventoryHolder {
     protected Inventory inventory;
     protected ItemStack fillerGlass = MenuItem.FILLER_GLASS.getItem();
     protected ItemStack nextPage = MenuItem.NEXT_PAGE.getItem();
+    protected ItemStack buy = MenuItem.BUY.getItem();
+    protected ItemStack cancel = MenuItem.CANCEL.getItem();
     protected ItemStack previousPage = MenuItem.PREVIOUS_PAGE.getItem();
     protected ItemStack back = MenuItem.BACK.getItem();
     protected ItemStack blueTeam = MenuItem.BLUE_TEAM.getItem();

@@ -89,21 +89,21 @@ public class GameListener implements Listener {
                         gameManager.endGame();
                     }
                 }
-            } else e.setCancelled(isSafeLocation(e.getBlock().getLocation()));
+            } else e.setCancelled(Chaos.getPlugin().getPU().isSafeLocation(e.getBlock().getLocation()));
         } else e.setCancelled(true);
     }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
         if (Chaos.getPlugin().getData().getGameState().equals(GameState.ACTIVE)) {
-            e.setCancelled(isSafeLocation(e.getBlock().getLocation()));
+            e.setCancelled(Chaos.getPlugin().getPU().isSafeLocation(e.getBlock().getLocation()));
         } else e.setCancelled(true);
     }
 
     @EventHandler
     public void onBucketUse(PlayerBucketEmptyEvent e) {
         if (Chaos.getPlugin().getData().getGameState().equals(GameState.ACTIVE)) {
-            e.setCancelled(isSafeLocation(e.getBlock().getLocation()));
+            e.setCancelled(Chaos.getPlugin().getPU().isSafeLocation(e.getBlock().getLocation()));
         } else e.setCancelled(true);
     }
 
@@ -111,75 +111,81 @@ public class GameListener implements Listener {
     public void onDamageSpawn(EntityDamageEvent e) {
         if (e.getEntity() instanceof Player player) {
             if (Chaos.getPlugin().getData().getGameState().equals(GameState.ACTIVE)) {
-                e.setCancelled(isSafeLocation(player.getLocation()));
+                e.setCancelled(Chaos.getPlugin().getPU().isSafeLocation(player.getLocation()));
             } else e.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onPistonRetract(BlockPistonRetractEvent e) {
-        List<Block> blocks = new ArrayList<>(e.getBlocks());
-        if (blocks.size() > 0) {
-            Block lastBlock = blocks.get(blocks.size() - 1);
-            lastBlock = lastBlock.getRelative(e.getDirection());
-            blocks.add(lastBlock);
-        }
-        for (Block block : blocks) {
-            if (block.getType().equals(Material.RED_WOOL)) e.setCancelled(true);
-            else if (block.getType().equals(Material.BLUE_WOOL)) e.setCancelled(true);
-            else if (isSafeLocation(block.getLocation())) e.setCancelled(true);
+        Chaos plugin = Chaos.getPlugin();
+        if (plugin.getData().getGameState().equals(GameState.ACTIVE)) {
+            List<Block> blocks = new ArrayList<>(e.getBlocks());
+            if (blocks.size() > 0) {
+                Block lastBlock = blocks.get(blocks.size() - 1);
+                lastBlock = lastBlock.getRelative(e.getDirection());
+                blocks.add(lastBlock);
+            }
+            for (Block block : blocks) {
+                if (block.getType().equals(Material.RED_WOOL)) e.setCancelled(true);
+                else if (block.getType().equals(Material.BLUE_WOOL)) e.setCancelled(true);
+                else if (plugin.getPU().isSafeLocation(block.getLocation())) e.setCancelled(true);
+            }
         }
     }
 
     @EventHandler
     public void onPistonExtend(BlockPistonExtendEvent e) {
-        List<Block> blocks = new ArrayList<>(e.getBlocks());
-        if (blocks.size() > 0) {
-            Block lastBlock = blocks.get(blocks.size() - 1);
-            lastBlock = lastBlock.getRelative(e.getDirection());
-            blocks.add(lastBlock);
-        }
-        for (Block block : blocks) {
-            if (block.getType().equals(Material.RED_WOOL)) e.setCancelled(true);
-            else if (block.getType().equals(Material.BLUE_WOOL)) e.setCancelled(true);
-            else if (isSafeLocation(block.getLocation())) e.setCancelled(true);
+        Chaos plugin = Chaos.getPlugin();
+        if (plugin.getData().getGameState().equals(GameState.ACTIVE)) {
+            List<Block> blocks = new ArrayList<>(e.getBlocks());
+            if (blocks.size() > 0) {
+                Block lastBlock = blocks.get(blocks.size() - 1);
+                lastBlock = lastBlock.getRelative(e.getDirection());
+                blocks.add(lastBlock);
+            }
+            for (Block block : blocks) {
+                if (block.getType().equals(Material.RED_WOOL)) e.setCancelled(true);
+                else if (block.getType().equals(Material.BLUE_WOOL)) e.setCancelled(true);
+                else if (plugin.getPU().isSafeLocation(block.getLocation())) e.setCancelled(true);
+            }
         }
     }
 
     @EventHandler
     public void onFlow(BlockFromToEvent e) {
-        Block block = e.getBlock();
-        if (block.getType().equals(Material.WATER) || block.getType().equals(Material.LAVA)) {
-            if (isSafeLocation(e.getToBlock().getLocation())) e.setCancelled(true);
+        Chaos plugin = Chaos.getPlugin();
+        if (plugin.getData().getGameState().equals(GameState.ACTIVE)) {
+            Block block = e.getBlock();
+            if (block.getType().equals(Material.WATER) || block.getType().equals(Material.LAVA)) {
+                if (plugin.getPU().isSafeLocation(e.getToBlock().getLocation())) e.setCancelled(true);
+            }
         }
     }
 
     @EventHandler
     public void onBlockBurn(BlockBurnEvent e) {
-        Block block = e.getBlock();
-        if (isSafeLocation(block.getLocation()) || block.getType().equals(Material.RED_WOOL) || block.getType().equals(Material.BLUE_WOOL)) e.setCancelled(true);
+        Chaos plugin = Chaos.getPlugin();
+        if (plugin.getData().getGameState().equals(GameState.ACTIVE)) {
+            Block block = e.getBlock();
+            if (plugin.getPU().isSafeLocation(block.getLocation()) || block.getType().equals(Material.RED_WOOL) || block.getType().equals(Material.BLUE_WOOL)) e.setCancelled(true);
+        }
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onBlockChange(EntityChangeBlockEvent e) {
-        Block block = e.getBlock();
-        if (isSafeLocation(block.getLocation()) || block.getType().equals(Material.RED_WOOL) || block.getType().equals(Material.BLUE_WOOL)) e.setCancelled(true);
+        Chaos plugin = Chaos.getPlugin();
+        if (plugin.getData().getGameState().equals(GameState.ACTIVE)) {
+            Block block = e.getBlock();
+            if (plugin.getPU().isSafeLocation(block.getLocation()) || block.getType().equals(Material.RED_WOOL) || block.getType().equals(Material.BLUE_WOOL)) e.setCancelled(true);
+        }
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.LOWEST)
     public void onExplodeEvent(EntityExplodeEvent e) {
-        e.blockList().removeIf(block -> isSafeLocation(block.getLocation()) || block.getType().equals(Material.RED_WOOL) || block.getType().equals(Material.BLUE_WOOL));
-    }
-
-    private boolean isSafeLocation(Location location) {
-        MapData map = Chaos.getPlugin().getData().getActiveMap().getData();
-        Location redSpawn = map.getRedSpawn();
-        Location blueSpawn = map.getBlueSpawn();
-        Location gameSpawn = map.getSpawn();
-        int radius = 5;
-        boolean red = location.distanceSquared(redSpawn) <= radius * radius;
-        boolean blue = location.distanceSquared(blueSpawn) <= radius * radius;
-        boolean spawn = location.distanceSquared(gameSpawn) <= radius * radius;
-        return red || blue || spawn;
+        Chaos plugin = Chaos.getPlugin();
+        if (plugin.getData().getGameState().equals(GameState.ACTIVE)) {
+            e.blockList().removeIf(block -> plugin.getPU().isSafeLocation(block.getLocation()) || block.getType().equals(Material.RED_WOOL) || block.getType().equals(Material.BLUE_WOOL));
+        }
     }
 }

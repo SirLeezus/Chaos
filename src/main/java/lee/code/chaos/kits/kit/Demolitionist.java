@@ -1,6 +1,7 @@
 package lee.code.chaos.kits.kit;
 
 import lee.code.chaos.Chaos;
+import lee.code.chaos.PU;
 import lee.code.chaos.kits.Kit;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.recipes.Tool;
@@ -19,18 +20,20 @@ public class Demolitionist extends Kit {
     private final ItemStack unlockedPreview;
 
     public Demolitionist() {
+        PU pu = Chaos.getPlugin().getPU();
         kit.put(-1, new ItemStack(Material.SHIELD, 1));
         kit.put(0, Tool.IRON_SWORD.getItem());
-        kit.put(1, Tool.IRON_AXE.getItem());
-        kit.put(2, new ItemStack(Material.TNT, 5));
-        kit.put(3, new ItemStack(Material.APPLE, 5));
+        kit.put(1, new ItemStack(Material.TNT, 3));
+        kit.put(2, new ItemStack(Material.APPLE, 5));
+        kit.put(3, Tool.IRON_AXE.getItem());
+        kit.put(4, new ItemStack(Material.OAK_PLANKS, 30));
         ItemStack locked = BukkitUtils.getItem(Material.STRUCTURE_VOID,
                 Lang.MENU_KIT_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
                 Lang.MENU_KIT_LORE_LOCKED.getString(new String[] { BukkitUtils.parseValue(cost()) }),
                 null,
                 true);
         ItemMeta lockedMeta = locked.getItemMeta();
-        Chaos.getPlugin().getPU().setPreviewItemKitMeta(lockedMeta, name());
+        pu.setPreviewItemKitMeta(lockedMeta, name());
         locked.setItemMeta(lockedMeta);
         lockedPreview = locked;
 
@@ -40,7 +43,7 @@ public class Demolitionist extends Kit {
                 null,
                 true);
         ItemMeta unlockedMeta = unlocked.getItemMeta();
-        Chaos.getPlugin().getPU().setPreviewItemKitMeta(unlockedMeta, name());
+        pu.setPreviewItemKitMeta(unlockedMeta, name());
         unlocked.setItemMeta(unlockedMeta);
         unlockedPreview = unlocked;
     }

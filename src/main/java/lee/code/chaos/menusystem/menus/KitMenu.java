@@ -73,8 +73,10 @@ public class KitMenu extends PaginatedMenu {
         } else if (!clickedItem.getType().equals(Material.STRUCTURE_VOID)) {
             Kit kit = plugin.getPU().getPreviewItemKit(clickedItem);
             if (e.isLeftClick()) {
+                playClickSound(player);
                 cacheManager.setKit(uuid, kit.name());
                 player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_KIT_SELECTED.getComponent(new String[] { BukkitUtils.parseCapitalization(kit.name()) })));
+                inventory.close();
             } else if (e.isRightClick()) {
                 playClickSound(player);
                 new KitPreview(pmu, kit).open();
@@ -82,7 +84,8 @@ public class KitMenu extends PaginatedMenu {
         } else if (clickedItem.getType().equals(Material.STRUCTURE_VOID)) {
             Kit kit = plugin.getPU().getPreviewItemKit(clickedItem);
             if (e.isLeftClick()) {
-                //TODO buy logic
+                playClickSound(player);
+                new KitBuyPreview(pmu, kit).open();
             } else if (e.isRightClick()) {
                 playClickSound(player);
                 new KitPreview(pmu, kit).open();
@@ -113,7 +116,7 @@ public class KitMenu extends PaginatedMenu {
                 if (kits.get(index) != null) {
                     Kit kit = kits.get(index);
                     if (plugin.getCacheManager().getKit(player.getUniqueId()).equals(kit)) {
-                        ItemStack previewItem = kit.unlockedPreview();
+                        ItemStack previewItem = new ItemStack(kit.unlockedPreview());
                         ItemMeta itemMeta = previewItem.getItemMeta();
                         itemMeta.addEnchant(Enchantment.ARROW_INFINITE, 1, false);
                         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

@@ -12,6 +12,8 @@ public enum MenuItem {
     FILLER_GLASS(Material.BLACK_STAINED_GLASS_PANE, "&r", null),
     CLOSE_MENU(Material.BARRIER, "&c&lClose", null),
     NEXT_PAGE(Material.PAPER, "&eNext Page >", null),
+    BUY(Material.LIME_STAINED_GLASS_PANE, "&a&lBuy", null),
+    CANCEL(Material.RED_STAINED_GLASS_PANE, "&c&lCancel", null),
     PREVIOUS_PAGE(Material.PAPER, "&e< Previous Page", null),
     BACK(Material.BARRIER, "&c&l< Back", null),
     BLUE_TEAM(Material.BLUE_WOOL, "&9&lBlue Team", null),

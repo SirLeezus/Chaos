@@ -1,6 +1,7 @@
 package lee.code.chaos.kits.kit;
 
 import lee.code.chaos.Chaos;
+import lee.code.chaos.PU;
 import lee.code.chaos.kits.Kit;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.recipes.Tool;
@@ -19,6 +20,7 @@ public class Default extends Kit {
     private final ItemStack unlockedPreview;
 
     public Default() {
+        PU pu = Chaos.getPlugin().getPU();
         kit.put(-1, new ItemStack(Material.SHIELD, 1));
         kit.put(0, Tool.IRON_SWORD.getItem());
         kit.put(1, new ItemStack(Material.BOW, 1));
@@ -33,7 +35,7 @@ public class Default extends Kit {
                 null,
                 true);
         ItemMeta lockedMeta = locked.getItemMeta();
-        Chaos.getPlugin().getPU().setPreviewItemKitMeta(lockedMeta, name());
+        pu.setPreviewItemKitMeta(lockedMeta, name());
         locked.setItemMeta(lockedMeta);
         lockedPreview = locked;
 
@@ -43,7 +45,7 @@ public class Default extends Kit {
                 null,
                 true);
         ItemMeta unlockedMeta = unlocked.getItemMeta();
-        Chaos.getPlugin().getPU().setPreviewItemKitMeta(unlockedMeta, name());
+        pu.setPreviewItemKitMeta(unlockedMeta, name());
         unlocked.setItemMeta(unlockedMeta);
         unlockedPreview = unlocked;
     }

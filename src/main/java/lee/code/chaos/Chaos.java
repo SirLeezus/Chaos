@@ -1,8 +1,10 @@
 package lee.code.chaos;
 
+import lee.code.chaos.commands.cmds.KitsCMD;
 import lee.code.chaos.commands.cmds.MessageCMD;
 import lee.code.chaos.commands.cmds.ReplyCMD;
 import lee.code.chaos.commands.cmds.StatsCMD;
+import lee.code.chaos.commands.tabs.KitsTab;
 import lee.code.chaos.commands.tabs.MessageTab;
 import lee.code.chaos.commands.tabs.ReplyTab;
 import lee.code.chaos.commands.tabs.StatsTab;
@@ -64,6 +66,7 @@ public class Chaos extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SignListener(), this);
         getServer().getPluginManager().registerEvents(new ChatListener(), this);
         getServer().getPluginManager().registerEvents(new CommandTabListener(), this);
+        getServer().getPluginManager().registerEvents(new KitListener(), this);
     }
 
     private void registerCommands() {
@@ -73,6 +76,8 @@ public class Chaos extends JavaPlugin {
         getCommand("reply").setTabCompleter(new ReplyTab());
         getCommand("stats").setExecutor(new StatsCMD());
         getCommand("stats").setTabCompleter(new StatsTab());
+        getCommand("kits").setExecutor(new KitsCMD());
+        getCommand("kits").setTabCompleter(new KitsTab());
     }
 
     public static Chaos getPlugin() {
