@@ -4,6 +4,7 @@ import lee.code.chaos.kits.Kit;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.menusystem.Menu;
 import lee.code.chaos.menusystem.PlayerMU;
+import lee.code.core.util.bukkit.BukkitUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -22,7 +23,7 @@ public class KitPreview extends Menu {
 
     @Override
     public Component getMenuName() {
-        return Lang.MENU_TEAM_PREVIEW_TITLE.getComponent(null);
+        return Lang.MENU_TEAM_PREVIEW_TITLE.getComponent(new String[] { BukkitUtils.parseCapitalization(kit.name()) });
     }
 
     @Override

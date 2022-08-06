@@ -4,7 +4,6 @@ import lee.code.chaos.Chaos;
 import lee.code.chaos.Data;
 import lee.code.chaos.database.CacheManager;
 import lee.code.chaos.kits.Kit;
-import lee.code.chaos.kits.kit.Default;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.menusystem.PaginatedMenu;
 import lee.code.chaos.menusystem.PlayerMU;
@@ -18,9 +17,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Collections;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.UUID;
 
 public class KitMenu extends PaginatedMenu {
@@ -99,16 +96,7 @@ public class KitMenu extends PaginatedMenu {
         Chaos plugin = Chaos.getPlugin();
         Player player = pmu.getOwner();
         Data data = plugin.getData();
-        LinkedList<Kit> kits = new LinkedList<>(data.getKits());
-
-        //set default first always
-        for (int i = 0; i < kits.size(); i++) {
-            if (kits.get(i).name().equals("default")) {
-                Collections.swap(kits, 0, i);
-                break;
-            }
-        }
-
+        LinkedList<Kit> kits = data.getKits();
         if (!kits.isEmpty()) {
             for(int i = 0; i < getMaxItemsPerPage(); i++) {
                 index = getMaxItemsPerPage() * page + i;

@@ -26,7 +26,7 @@ public class KitBuyPreview extends Menu {
 
     @Override
     public Component getMenuName() {
-        return Lang.MENU_TEAM_PREVIEW_TITLE.getComponent(null);
+        return Lang.MENU_TEAM_PREVIEW_TITLE.getComponent(new String[] { BukkitUtils.parseCapitalization(kit.name()) });
     }
 
     @Override

@@ -21,6 +21,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.potion.PotionEffect;
 
 import java.time.Duration;
 import java.util.*;
@@ -139,6 +140,7 @@ public class GameManager {
         player.setHealth(20);
         player.setFoodLevel(20);
         player.setFireTicks(0);
+        for (PotionEffect potionEffect : player.getActivePotionEffects()) player.removePotionEffect(potionEffect.getType());
         loadKit(player);
         loadArmor(player);
     }
@@ -151,6 +153,7 @@ public class GameManager {
         player.setHealth(20);
         player.setFoodLevel(20);
         player.setFireTicks(0);
+        for (PotionEffect potionEffect : player.getActivePotionEffects()) player.removePotionEffect(potionEffect.getType());
         loadSpectatorItems(player);
     }
 
@@ -176,12 +179,14 @@ public class GameManager {
                 player.setHealth(20);
                 player.setFoodLevel(20);
                 player.setFireTicks(0);
+                for (PotionEffect potionEffect : player.getActivePotionEffects()) player.removePotionEffect(potionEffect.getType());
             });
             case RED -> player.teleportAsync(map.getRedSpawn()).thenAccept(result -> {
                 loadKit(player);
                 player.setHealth(20);
                 player.setFoodLevel(20);
                 player.setFireTicks(0);
+                for (PotionEffect potionEffect : player.getActivePotionEffects()) player.removePotionEffect(potionEffect.getType());
             });
         }
     }

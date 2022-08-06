@@ -49,9 +49,9 @@ public class Data {
     private final ConcurrentHashMap<UUID, BoardManager> activeBoardPackets = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, Double> playerHeathTracker = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, UUID> lastPlayerDamage = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<String, Kit> gameKits = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, ScoreData> playerScore = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, UUID> lastReplier = new ConcurrentHashMap<>();
+    private final LinkedHashMap<String, Kit> gameKits = new LinkedHashMap<>();
 
     public void setBoardPacket(UUID player, BoardManager boardManager) { activeBoardPackets.put(player, boardManager); }
     public BoardManager getBoardPacket(UUID player) {
@@ -65,7 +65,7 @@ public class Data {
     public UUID getLastPlayerDamage(UUID uuid) { return lastPlayerDamage.getOrDefault(uuid, null); }
     public void removeLastPlayerDamage(UUID uuid) { lastPlayerDamage.remove(uuid); }
 
-    public List<Kit> getKits() { return new ArrayList<>(gameKits.values()); }
+    public LinkedList<Kit> getKits() { return new LinkedList<>(gameKits.values()); }
     public Kit getKit(String kit) { return gameKits.get(kit); }
 
     public UUID getLastReplier(UUID uuid) { return lastReplier.get(uuid); }
@@ -145,7 +145,7 @@ public class Data {
             recipe = it.next();
             if (recipe != null) {
                 Material material = recipe.getResult().getType();
-                if (removedRecipes.contains(material) || material.equals(Material.RED_WOOL) || material.equals(Material.BLUE_WOOL)) {
+                if (removedRecipes.contains(material) || material.equals(Material.RED_WOOL) || material.equals(Material.BLUE_WOOL) || material.equals(Material.ENDER_CHEST)) {
                     it.remove();
                 }
             }
@@ -176,14 +176,22 @@ public class Data {
 
         Kit defaultKit = new Default();
         gameKits.put(defaultKit.name(), defaultKit);
-        Kit demolitionist = new Demolitionist();
-        gameKits.put(demolitionist.name(), demolitionist);
-        Kit deepDive = new DeepDive();
-        gameKits.put(deepDive.name(), deepDive);
         Kit constructionWorker = new ConstructionWorker();
         gameKits.put(constructionWorker.name(), constructionWorker);
         Kit heavyHitter = new HeavyHitter();
         gameKits.put(heavyHitter.name(), heavyHitter);
+        Kit noMercy = new NoMercy();
+        gameKits.put(noMercy.name(), noMercy);
+        Kit deepDive = new DeepDive();
+        gameKits.put(deepDive.name(), deepDive);
+        Kit engineer = new Engineer();
+        gameKits.put(engineer.name(), engineer);
+        Kit bullseye = new Bullseye();
+        gameKits.put(bullseye.name(), bullseye);
+        Kit enchanter = new Enchanter();
+        gameKits.put(enchanter.name(), enchanter);
+        Kit demolitionist = new Demolitionist();
+        gameKits.put(demolitionist.name(), demolitionist);
     }
 
     public int getNextMap() {
