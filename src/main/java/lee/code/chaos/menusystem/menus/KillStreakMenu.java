@@ -74,6 +74,13 @@ public class KillStreakMenu extends PaginatedMenu {
                 cacheManager.addSelectedKillStreak(uuid, killStreak.name());
                 player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_KILL_STREAK_SELECTED.getComponent(new String[] { BukkitUtils.parseCapitalization(killStreak.name()) })));
                 this.open();
+            } else if (e.isRightClick()) {
+                playClickSound(player);
+                if (cacheManager.getSelectedKillStreaks(uuid).contains(killStreak)) {
+                    cacheManager.removeSelectedKillStreak(uuid, killStreak.name());
+                    player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_KILL_STREAK_UNSELECTED.getComponent(new String[] { BukkitUtils.parseCapitalization(killStreak.name()) })));
+                    this.open();
+                }
             }
         } else if (clickedItem.getType().equals(Material.STRUCTURE_VOID)) {
             KillStreak killStreak = pu.getPreviewItemKillStreak(clickedItem);

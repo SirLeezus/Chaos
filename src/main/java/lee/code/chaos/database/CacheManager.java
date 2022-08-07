@@ -218,4 +218,12 @@ public class CacheManager {
         updatePlayerTable(playerTable);
     }
 
+    public void removeSelectedKillStreak(UUID uuid, String name) {
+        PlayerTable playerTable = getPlayerTable(uuid);
+        LinkedList<String> streaks =  new LinkedList<>(Arrays.asList(StringUtils.split(playerTable.getSelectedKillStreaks(), ',')));
+        streaks.remove(name);
+        if (streaks.isEmpty()) playerTable.setSelectedKillStreaks("0");
+        else playerTable.setSelectedKillStreaks(StringUtils.join(streaks, ","));
+        updatePlayerTable(playerTable);
+    }
 }

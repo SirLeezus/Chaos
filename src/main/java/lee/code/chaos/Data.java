@@ -213,6 +213,10 @@ public class Data {
         gameKits.put(enchanter.name(), enchanter);
         Kit demolitionist = new Demolitionist();
         gameKits.put(demolitionist.name(), demolitionist);
+        Kit hadouken = new Hadouken();
+        gameKits.put(hadouken.name(), hadouken);
+        Kit tripleShot = new TripleShot();
+        gameKits.put(tripleShot.name(), tripleShot);
 
         //kill streaks
         KillStreak eyesInTheSky = new EyesInTheSky();
