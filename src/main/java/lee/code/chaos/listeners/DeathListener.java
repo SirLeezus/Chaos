@@ -10,6 +10,7 @@ import lee.code.chaos.managers.GameManager;
 import lee.code.chaos.maps.MapData;
 import lee.code.chaos.maps.ScoreData;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,6 +18,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.LinkedList;
 import java.util.UUID;
@@ -91,20 +93,18 @@ public class DeathListener implements Listener {
                 Data data = Chaos.getPlugin().getData();
                 MapData map = data.getActiveMap().getData();
                 UUID uuid = player.getUniqueId();
-                ScoreData scoreData = data.getPlayerScoreData(uuid);
                 if (!map.getSpectators().contains(uuid)) {
                     if (map.getTeam(data.getLastPlayerDamage(uuid)).equals(map.getTeam(uuid))) {
                         e.setCancelled(true);
                         return;
                     }
                     if (e.getDamage() >= player.getHealth() && !e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
-                        e.setCancelled(true);
-                        Player attacker = Bukkit.getPlayer(data.getLastPlayerDamage(uuid));
-                        respawnPlayer(player, attacker);
-                        data.removeLastPlayerDamage(uuid);
-                        scoreData.setKillSteakOneUsed(false);
-                        scoreData.setKillSteakTwoUsed(false);
-                        scoreData.setKillSteakThreeUsed(false);
+                        if (!player.getInventory().contains(new ItemStack(Material.TOTEM_OF_UNDYING))) {
+                            e.setCancelled(true);
+                            Player attacker = Bukkit.getPlayer(data.getLastPlayerDamage(uuid));
+                            respawnPlayer(player, attacker);
+                            data.removeLastPlayerDamage(uuid);
+                        }
                     }
                 }
             }
@@ -148,10 +148,12 @@ public class DeathListener implements Listener {
 
     private void respawnPlayer(Player player, Player attacker) {
         Chaos plugin = Chaos.getPlugin();
+        UUID uuid = player.getUniqueId();
         Data data = plugin.getData();
         MapData map = data.getActiveMap().getData();
         GameManager gameManager = plugin.getGameManager();
-        GameTeam team = map.getTeam(player.getUniqueId());
+        GameTeam team = map.getTeam(uuid);
+        ScoreData scoreData = data.getPlayerScoreData(uuid);
         switch (team) {
             case BLUE -> {
                 if (attacker != null) {
@@ -164,7 +166,10 @@ public class DeathListener implements Listener {
                     })));
                     killStreakChecker(attacker);
                 } else Bukkit.getServer().sendMessage(Lang.PREFIX.getComponent(null).append(Lang.PLAYER_DIED.getComponent(new String[] { Lang.BLUE_COLOR.getString(null), player.getName() })));
-                data.addPlayerDeath(player.getUniqueId());
+                scoreData.setKillSteakOneUsed(false);
+                scoreData.setKillSteakTwoUsed(false);
+                scoreData.setKillSteakThreeUsed(false);
+                data.addPlayerDeath(uuid);
                 gameManager.respawnPlayer(player);
             }
             case RED -> {
@@ -178,7 +183,10 @@ public class DeathListener implements Listener {
                     })));
                     killStreakChecker(attacker);
                 } else Bukkit.getServer().sendMessage(Lang.PREFIX.getComponent(null).append(Lang.PLAYER_DIED.getComponent(new String[] { Lang.RED_COLOR.getString(null), player.getName() })));
-                data.addPlayerDeath(player.getUniqueId());
+                scoreData.setKillSteakOneUsed(false);
+                scoreData.setKillSteakTwoUsed(false);
+                scoreData.setKillSteakThreeUsed(false);
+                data.addPlayerDeath(uuid);
                 gameManager.respawnPlayer(player);
             }
             case SPECTATOR -> player.teleportAsync(map.getSpawn());
@@ -197,6 +205,10 @@ public class DeathListener implements Listener {
             if (data.hasEntityOwner(enderDragon.getUniqueId())) return Bukkit.getPlayer(data.getEntityOwner(enderDragon.getUniqueId()));
         } else if (entity instanceof Creeper creeper) {
             if (data.hasEntityOwner(creeper.getUniqueId())) return Bukkit.getPlayer(data.getEntityOwner(creeper.getUniqueId()));
+        } else if (entity instanceof Horse horse) {
+            if (data.hasEntityOwner(horse.getUniqueId())) return Bukkit.getPlayer(data.getEntityOwner(horse.getUniqueId()));
+        } else if (entity instanceof LightningStrike lightningStrike) {
+            if (data.hasEntityOwner(lightningStrike.getUniqueId())) return Bukkit.getPlayer(data.getEntityOwner(lightningStrike.getUniqueId()));
         }
         return null;
     }

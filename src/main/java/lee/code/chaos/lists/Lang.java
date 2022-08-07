@@ -20,6 +20,8 @@ public enum Lang {
     KILL_STREAK_ACTIVATED_PLAYER("&5Your kill streak &d&l{0} &5has been activated!"),
     KILL_STREAK_ACTIVATED_SERVER("&5The player {0}{1} &5activated the kill streak &d&l{2}&5!"),
     KILL_STREAK_ACTIVATED_HOVER("{0}"),
+    KILL_STREAK_NUKE_WARNING("&e&lNuke Inbound &6☢ &7({0}&7)"),
+    KILL_STREAK_HORSE_NAME("{0}{1}'s Horse"),
     RED_COLOR("&c"),
     BLUE_TEAM("&9&lBlue"),
     RED_TEAM("&c&lRed"),

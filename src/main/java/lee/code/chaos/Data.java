@@ -225,6 +225,16 @@ public class Data {
         gameKillStreaks.put(homeRun.name(), homeRun);
         KillStreak juiced = new Juiced();
         gameKillStreaks.put(juiced.name(), juiced);
+        KillStreak nuke = new Nuke();
+        gameKillStreaks.put(nuke.name(), nuke);
+        KillStreak explosiveRestock = new ExplosiveRestock();
+        gameKillStreaks.put(explosiveRestock.name(), explosiveRestock);
+        KillStreak trustySteed = new TrustySteed();
+        gameKillStreaks.put(trustySteed.name(), trustySteed);
+        KillStreak secondChance = new SecondChance();
+        gameKillStreaks.put(secondChance.name(), secondChance);
+        KillStreak flashStorm = new FlashStorm();
+        gameKillStreaks.put(flashStorm.name(), flashStorm);
     }
 
     public int getNextMap() {
