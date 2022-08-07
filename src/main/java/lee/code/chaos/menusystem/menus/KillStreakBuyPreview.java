@@ -2,7 +2,7 @@ package lee.code.chaos.menusystem.menus;
 
 import lee.code.chaos.Chaos;
 import lee.code.chaos.database.CacheManager;
-import lee.code.chaos.kits.Kit;
+import lee.code.chaos.killstreaks.KillStreak;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.menusystem.Menu;
 import lee.code.chaos.menusystem.PlayerMU;
@@ -16,17 +16,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.UUID;
 
-public class KitBuyPreview extends Menu {
-    private final Kit kit;
+public class KillStreakBuyPreview extends Menu {
+    private final KillStreak killStreak;
 
-    public KitBuyPreview(PlayerMU pmu, Kit kit) {
+    public KillStreakBuyPreview(PlayerMU pmu, KillStreak killStreak) {
         super(pmu);
-        this.kit = kit;
+        this.killStreak = killStreak;
     }
 
     @Override
     public Component getMenuName() {
-        return Lang.MENU_KIT_PREVIEW_TITLE.getComponent(new String[] { BukkitUtils.parseCapitalization(kit.name()) });
+        return Lang.MENU_KILL_STREAK_PREVIEW_TITLE.getComponent(null);
     }
 
     @Override
@@ -49,19 +49,19 @@ public class KitBuyPreview extends Menu {
 
         if (clickedItem.equals(cancel)) {
             playClickSound(player);
-            new KitMenu(pmu).open();
+            new KillStreakMenu(pmu).open();
         } else if (clickedItem.equals(buy)) {
             playClickSound(player);
             long balance = cacheManager.getCoins(uuid);
-            if (balance >= kit.cost()) {
-                cacheManager.setCoins(uuid, balance - kit.cost());
-                cacheManager.setKit(uuid, kit.name());
-                cacheManager.addPerm(uuid, "chaos.kit." + kit.name());
+            if (balance >= killStreak.cost()) {
+                cacheManager.setCoins(uuid, balance - killStreak.cost());
+                cacheManager.addSelectedKillStreak(uuid, killStreak.name());
+                cacheManager.addPerm(uuid, "chaos.streak." + killStreak.name());
                 plugin.getPermissionManager().register(player);
-                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_BUY_KIT.getComponent(new String[] { BukkitUtils.parseCapitalization(kit.name()) })));
+                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_KILL_STREAK.getComponent(new String[] { BukkitUtils.parseCapitalization(killStreak.name()) })));
                 inventory.close();
             } else {
-                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_BUY_KIT_BALANCE.getComponent(new String[] { BukkitUtils.parseValue(balance), BukkitUtils.parseValue(kit.cost()), BukkitUtils.parseCapitalization(kit.name()) })));
+                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_BUY_KILL_STREAK_BALANCE.getComponent(new String[] { BukkitUtils.parseValue(balance), BukkitUtils.parseValue(killStreak.cost()), BukkitUtils.parseCapitalization(killStreak.name()) })));
                 inventory.close();
             }
         }
@@ -70,9 +70,9 @@ public class KitBuyPreview extends Menu {
     @Override
     public void setMenuItems() {
         setFillerGlass();
-        ItemStack item = new ItemStack(kit.unlockedPreview());
+        ItemStack item = new ItemStack(killStreak.unlockedPreview());
         ItemMeta meta = item.getItemMeta();
-        BukkitUtils.setItemLore(meta, Lang.MENU_BUY_PREVIEW_LORE.getString(new String[] { BukkitUtils.parseValue(kit.cost()) }));
+        BukkitUtils.setItemLore(meta, Lang.MENU_BUY_PREVIEW_LORE.getString(new String[] { BukkitUtils.parseValue(killStreak.cost()) }));
         item.setItemMeta(meta);
 
         inventory.setItem(11, cancel);

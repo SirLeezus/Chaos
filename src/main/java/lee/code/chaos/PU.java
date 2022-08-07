@@ -1,6 +1,8 @@
 package lee.code.chaos;
 
+import lee.code.chaos.killstreaks.KillStreak;
 import lee.code.chaos.kits.Kit;
+import lee.code.chaos.lists.GameTeam;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.maps.MapData;
 import lee.code.core.util.bukkit.BukkitUtils;
@@ -8,10 +10,10 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -85,6 +87,16 @@ public class PU {
         NamespacedKey key = new NamespacedKey(plugin, "key");
         String kit = dataContainer.get(key, PersistentDataType.STRING);
         if (kit != null) return plugin.getData().getKit(kit);
+        else return null;
+    }
+
+    public KillStreak getPreviewItemKillStreak(ItemStack item) {
+        Chaos plugin = Chaos.getPlugin();
+        ItemMeta itemMeta = item.getItemMeta();
+        PersistentDataContainer dataContainer = itemMeta.getPersistentDataContainer();
+        NamespacedKey key = new NamespacedKey(plugin, "key");
+        String kit = dataContainer.get(key, PersistentDataType.STRING);
+        if (kit != null) return plugin.getData().getKillStreak(kit);
         else return null;
     }
 

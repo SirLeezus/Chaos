@@ -158,6 +158,7 @@ public class GameManager {
     }
 
     private void loadSpectatorItems(Player player) {
+        player.getInventory().setItem(2, SpectatorItem.KILL_STREAK_SELECTOR.getItem());
         player.getInventory().setItem(4, SpectatorItem.TEAM_SELECTOR.getItem());
         player.getInventory().setItem(6, SpectatorItem.KIT_SELECTOR.getItem());
         player.updateInventory();
@@ -175,6 +176,7 @@ public class GameManager {
         player.getInventory().getItemInOffHand().setType(Material.AIR);
         switch (map.getTeam(uuid)) {
             case BLUE -> player.teleportAsync(map.getBlueSpawn()).thenAccept(result -> {
+                loadArmor(player);
                 loadKit(player);
                 player.setHealth(20);
                 player.setFoodLevel(20);
@@ -182,6 +184,7 @@ public class GameManager {
                 for (PotionEffect potionEffect : player.getActivePotionEffects()) player.removePotionEffect(potionEffect.getType());
             });
             case RED -> player.teleportAsync(map.getRedSpawn()).thenAccept(result -> {
+                loadArmor(player);
                 loadKit(player);
                 player.setHealth(20);
                 player.setFoodLevel(20);

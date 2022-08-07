@@ -47,6 +47,9 @@ public class PlayerTable {
     @DatabaseField(columnName = "kit", canBeNull = false)
     private String kit;
 
+    @DatabaseField(columnName = "selected_kill_streaks", canBeNull = false)
+    private String selectedKillStreaks;
+
     public PlayerTable(UUID player) {
         this.player = player;
         this.coins = 0;
@@ -59,5 +62,6 @@ public class PlayerTable {
         this.perms = "0";
         this.rank = "0";
         this.kit = "default";
+        this.selectedKillStreaks = "0";
     }
 }

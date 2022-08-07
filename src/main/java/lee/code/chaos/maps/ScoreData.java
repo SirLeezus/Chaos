@@ -16,5 +16,8 @@ public class ScoreData {
     private int kills;
     private int killStreak;
     private int deaths;
+    private boolean killSteakOneUsed;
+    private boolean killSteakTwoUsed;
+    private boolean killSteakThreeUsed;
 
 }

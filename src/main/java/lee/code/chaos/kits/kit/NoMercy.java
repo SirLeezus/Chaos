@@ -7,6 +7,8 @@ import lee.code.chaos.lists.Lang;
 import lee.code.chaos.recipes.Tool;
 import lee.code.core.util.bukkit.BukkitUtils;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -21,6 +23,7 @@ public class NoMercy extends Kit {
     private final Map<Integer, ItemStack> kit = new HashMap<>();
     private final ItemStack lockedPreview;
     private final ItemStack unlockedPreview;
+    private final ItemStack selectedPreview;
 
     public NoMercy() {
         PU pu = Chaos.getPlugin().getPU();
@@ -55,6 +58,18 @@ public class NoMercy extends Kit {
         pu.setPreviewItemKitMeta(unlockedMeta, name());
         unlocked.setItemMeta(unlockedMeta);
         unlockedPreview = unlocked;
+
+        ItemStack selected = BukkitUtils.getItem(Material.SHEARS,
+                Lang.MENU_KIT_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
+                Lang.MENU_KIT_LORE_SELECTED.getString(null),
+                null,
+                true);
+        ItemMeta selectedMeta = selected.getItemMeta();
+        pu.setPreviewItemKitMeta(selectedMeta, name());
+        selectedMeta.addEnchant(Enchantment.ARROW_INFINITE, 0, true);
+        selectedMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        selected.setItemMeta(selectedMeta);
+        selectedPreview = selected;
     }
 
     @Override
@@ -75,6 +90,11 @@ public class NoMercy extends Kit {
     @Override
     public ItemStack unlockedPreview() {
         return unlockedPreview;
+    }
+
+    @Override
+    public ItemStack selectedPreview() {
+        return selectedPreview;
     }
 
     @Override

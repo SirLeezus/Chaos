@@ -5,6 +5,7 @@ import lee.code.chaos.Data;
 import lee.code.chaos.lists.GameState;
 import lee.code.chaos.lists.SpectatorItem;
 import lee.code.chaos.maps.MapData;
+import lee.code.chaos.menusystem.menus.KillStreakMenu;
 import lee.code.chaos.menusystem.menus.KitMenu;
 import lee.code.chaos.menusystem.menus.TeamMenu;
 import lee.code.core.util.bukkit.BukkitUtils;
@@ -67,6 +68,9 @@ public class SpectatorListener implements Listener {
                         player.playSound(player.getLocation(), Sound.ENTITY_LLAMA_SWAG, 1, 1);
                     } else if (player.getInventory().getItemInMainHand().equals(SpectatorItem.KIT_SELECTOR.getItem())) {
                         new KitMenu(data.getPlayerMU(uuid)).open();
+                        player.playSound(player.getLocation(), Sound.ENTITY_LLAMA_SWAG, 1, 1);
+                    } else if (player.getInventory().getItemInMainHand().equals(SpectatorItem.KILL_STREAK_SELECTOR.getItem())) {
+                        new KillStreakMenu(data.getPlayerMU(uuid)).open();
                         player.playSound(player.getLocation(), Sound.ENTITY_LLAMA_SWAG, 1, 1);
                     }
                 }

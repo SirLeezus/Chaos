@@ -5,15 +5,13 @@ import com.google.common.cache.CacheBuilder;
 import lee.code.chaos.Chaos;
 import lee.code.chaos.PU;
 import lee.code.chaos.database.tables.PlayerTable;
+import lee.code.chaos.killstreaks.KillStreak;
 import lee.code.chaos.kits.Kit;
 import lee.code.core.util.bukkit.BukkitUtils;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class CacheManager {
 
@@ -193,6 +191,31 @@ public class CacheManager {
 
     public Kit getKit(UUID uuid) {
         return Chaos.getPlugin().getData().getKit(getPlayerTable(uuid).getKit());
+    }
+
+    public boolean hasSelectedKillStreak(UUID uuid) {
+        return !getPlayerTable(uuid).getSelectedKillStreaks().equals("0");
+    }
+
+    public LinkedList<KillStreak> getSelectedKillStreaks(UUID uuid) {
+        PlayerTable playerTable = getPlayerTable(uuid);
+        LinkedList<KillStreak> killStreaks = new LinkedList<>();
+        for (String streak : StringUtils.split(playerTable.getSelectedKillStreaks(), ',')) {
+            killStreaks.add(Chaos.getPlugin().getData().getKillStreak(streak));
+        }
+        return killStreaks;
+    }
+
+    public void addSelectedKillStreak(UUID uuid, String name) {
+        PlayerTable playerTable = getPlayerTable(uuid);
+        if (playerTable.getSelectedKillStreaks().equals("0")) playerTable.setSelectedKillStreaks(name);
+        else {
+            LinkedList<String> streaks =  new LinkedList<>(Arrays.asList(StringUtils.split(playerTable.getSelectedKillStreaks(), ',')));
+            if (streaks.size() >= 3) streaks.remove(0);
+            streaks.add(name);
+            playerTable.setSelectedKillStreaks(StringUtils.join(streaks, ","));
+        }
+        updatePlayerTable(playerTable);
     }
 
 }

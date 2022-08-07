@@ -23,7 +23,7 @@ public class KitPreview extends Menu {
 
     @Override
     public Component getMenuName() {
-        return Lang.MENU_TEAM_PREVIEW_TITLE.getComponent(new String[] { BukkitUtils.parseCapitalization(kit.name()) });
+        return Lang.MENU_KIT_PREVIEW_TITLE.getComponent(new String[] { BukkitUtils.parseCapitalization(kit.name()) });
     }
 
     @Override

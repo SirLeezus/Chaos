@@ -1,13 +1,7 @@
 package lee.code.chaos;
 
-import lee.code.chaos.commands.cmds.KitsCMD;
-import lee.code.chaos.commands.cmds.MessageCMD;
-import lee.code.chaos.commands.cmds.ReplyCMD;
-import lee.code.chaos.commands.cmds.StatsCMD;
-import lee.code.chaos.commands.tabs.KitsTab;
-import lee.code.chaos.commands.tabs.MessageTab;
-import lee.code.chaos.commands.tabs.ReplyTab;
-import lee.code.chaos.commands.tabs.StatsTab;
+import lee.code.chaos.commands.cmds.*;
+import lee.code.chaos.commands.tabs.*;
 import lee.code.chaos.database.CacheManager;
 import lee.code.chaos.database.DatabaseManager;
 import lee.code.chaos.listeners.*;
@@ -57,6 +51,7 @@ public class Chaos extends JavaPlugin {
     }
 
     private void registerListeners() {
+        getServer().getPluginManager().registerEvents(new KillStreakListener(), this);
         getServer().getPluginManager().registerEvents(new JoinListener(), this);
         getServer().getPluginManager().registerEvents(new QuitListener(), this);
         getServer().getPluginManager().registerEvents(new SpectatorListener(), this);
@@ -78,6 +73,8 @@ public class Chaos extends JavaPlugin {
         getCommand("stats").setTabCompleter(new StatsTab());
         getCommand("kits").setExecutor(new KitsCMD());
         getCommand("kits").setTabCompleter(new KitsTab());
+        getCommand("killstreaks").setExecutor(new KillStreaksCMD());
+        getCommand("killstreaks").setTabCompleter(new KillStreakTab());
     }
 
     public static Chaos getPlugin() {

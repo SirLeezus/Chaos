@@ -22,3 +22,7 @@ commands:
     description: Open the kit menu.
     permission: chaos.command.kits
     usage: "/kits"
+  killstreaks:
+    description: Open the kill streak menu.
+    permission: chaos.command.killstreaks
+    usage: "/killstreaks"

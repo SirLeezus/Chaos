@@ -13,5 +13,6 @@ public class PlayerMU {
 
     private final UUID owner;
     @Getter @Setter private int kitPage;
+    @Getter @Setter private int killStreakPage;
     public Player getOwner() { return Bukkit.getPlayer(owner); }
 }

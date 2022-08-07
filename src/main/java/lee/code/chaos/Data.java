@@ -1,6 +1,8 @@
 package lee.code.chaos;
 
 import lee.code.chaos.database.CacheManager;
+import lee.code.chaos.killstreaks.KillStreak;
+import lee.code.chaos.killstreaks.killstreak.*;
 import lee.code.chaos.kits.Kit;
 import lee.code.chaos.kits.kit.*;
 import lee.code.chaos.lists.GameState;
@@ -45,6 +47,7 @@ public class Data {
 
     @Getter private final List<NamespacedKey> recipeKeys = new ArrayList<>();
 
+    private final ConcurrentHashMap<UUID, UUID> entityOwner = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, PlayerMU> playerMUList = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, BoardManager> activeBoardPackets = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, Double> playerHeathTracker = new ConcurrentHashMap<>();
@@ -52,6 +55,20 @@ public class Data {
     private final ConcurrentHashMap<UUID, ScoreData> playerScore = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, UUID> lastReplier = new ConcurrentHashMap<>();
     private final LinkedHashMap<String, Kit> gameKits = new LinkedHashMap<>();
+    private final LinkedHashMap<String, KillStreak> gameKillStreaks = new LinkedHashMap<>();
+
+    public void setEntityOwner(UUID entity, UUID owner) {
+        entityOwner.put(entity, owner);
+    }
+    public UUID getEntityOwner(UUID entity) {
+        return entityOwner.get(entity);
+    }
+    public void removeEntityOwner(UUID entity) {
+        entityOwner.remove(entity);
+    }
+    public boolean hasEntityOwner(UUID entity) {
+        return entityOwner.containsKey(entity);
+    }
 
     public void setBoardPacket(UUID player, BoardManager boardManager) { activeBoardPackets.put(player, boardManager); }
     public BoardManager getBoardPacket(UUID player) {
@@ -62,11 +79,14 @@ public class Data {
     public boolean hasBoard(UUID uuid) { return activeBoardPackets.containsKey(uuid); }
 
     public void setLastPlayerDamage(UUID uuid, UUID attacker) { lastPlayerDamage.put(uuid, attacker);}
-    public UUID getLastPlayerDamage(UUID uuid) { return lastPlayerDamage.getOrDefault(uuid, null); }
+    public UUID getLastPlayerDamage(UUID uuid) { return lastPlayerDamage.getOrDefault(uuid, UUID.fromString(Lang.SERVER_UUID.getString(null))); }
     public void removeLastPlayerDamage(UUID uuid) { lastPlayerDamage.remove(uuid); }
 
     public LinkedList<Kit> getKits() { return new LinkedList<>(gameKits.values()); }
     public Kit getKit(String kit) { return gameKits.get(kit); }
+
+    public LinkedList<KillStreak> getKillStreaks() { return new LinkedList<>(gameKillStreaks.values()); }
+    public KillStreak getKillStreak(String killStreak) { return gameKillStreaks.get(killStreak); }
 
     public UUID getLastReplier(UUID uuid) { return lastReplier.get(uuid); }
     public void setLastReplier(UUID player, UUID target) { lastReplier.put(player, target); }
@@ -174,6 +194,7 @@ public class Data {
         maps.add(new EgyptianIslands());
         maps.add(new LastDestination());
 
+        //kits
         Kit defaultKit = new Default();
         gameKits.put(defaultKit.name(), defaultKit);
         Kit constructionWorker = new ConstructionWorker();
@@ -192,6 +213,18 @@ public class Data {
         gameKits.put(enchanter.name(), enchanter);
         Kit demolitionist = new Demolitionist();
         gameKits.put(demolitionist.name(), demolitionist);
+
+        //kill streaks
+        KillStreak eyesInTheSky = new EyesInTheSky();
+        gameKillStreaks.put(eyesInTheSky.name(), eyesInTheSky);
+        KillStreak dragonRider = new CruelDragon();
+        gameKillStreaks.put(dragonRider.name(), dragonRider);
+        KillStreak rainingCreepers = new RainingCreepers();
+        gameKillStreaks.put(rainingCreepers.name(), rainingCreepers);
+        KillStreak homeRun = new HomeRun();
+        gameKillStreaks.put(homeRun.name(), homeRun);
+        KillStreak juiced = new Juiced();
+        gameKillStreaks.put(juiced.name(), juiced);
     }
 
     public int getNextMap() {
@@ -228,6 +261,7 @@ public class Data {
             gameManager.teleportServerSpawn();
             gameManager.scheduleWaitingTask();
             lastPlayerDamage.clear();
+            entityOwner.clear();
         }
     }
 

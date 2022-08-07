@@ -8,5 +8,6 @@ public abstract class Kit {
     public abstract Map<Integer, ItemStack> inventory();
     public abstract ItemStack lockedPreview();
     public abstract ItemStack unlockedPreview();
+    public abstract ItemStack selectedPreview();
     public abstract long cost();
 }
