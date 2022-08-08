@@ -96,12 +96,14 @@ public class KitListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.MONITOR)
     public void onTNTPlaceEvent(BlockPlaceEvent e) {
-        Block block = e.getBlock();
-        if (block.getType().equals(Material.TNT)) {
-            Data data = Chaos.getPlugin().getData();
-            data.setBlockOwner(block.getLocation(), e.getPlayer().getUniqueId());
+        if (!e.isCancelled()) {
+            Block block = e.getBlock();
+            if (block.getType().equals(Material.TNT)) {
+                Data data = Chaos.getPlugin().getData();
+                data.setBlockOwner(block.getLocation(), e.getPlayer().getUniqueId());
+            }
         }
     }
 
