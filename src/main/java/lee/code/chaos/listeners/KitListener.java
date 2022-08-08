@@ -97,6 +97,26 @@ public class KitListener implements Listener {
     }
 
     @EventHandler
+    public void onTNTPlaceEvent(BlockPlaceEvent e) {
+        Block block = e.getBlock();
+        if (block.getType().equals(Material.TNT)) {
+            Data data = Chaos.getPlugin().getData();
+            data.setBlockOwner(block.getLocation(), e.getPlayer().getUniqueId());
+        }
+    }
+
+    @EventHandler
+    public void onTNTNormalChange(EntitySpawnEvent e) {
+        if (e.getEntity() instanceof TNTPrimed tnt) {
+            Data data = Chaos.getPlugin().getData();
+            if (data.hasBlockOwner(tnt.getLocation())) {
+                data.setEntityOwner(tnt.getUniqueId(), data.getBlockOwner(tnt.getLocation()));
+                data.removeBlockOwner(tnt.getLocation());
+            }
+        }
+    }
+
+    @EventHandler
     public void onFireChargeThrow(PlayerInteractEvent e) {
         Chaos plugin = Chaos.getPlugin();
         Data data = plugin.getData();
@@ -114,26 +134,6 @@ public class KitListener implements Listener {
                 fireball.setShooter(player);
                 data.setEntityOwner(fireball.getUniqueId(), uuid);
                 player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GHAST_SHOOT, (float) 0.5, (float) 0.5);
-            }
-        }
-    }
-
-    @EventHandler
-    public void onTNTPlaceEvent(BlockPlaceEvent e) {
-        Block block = e.getBlock();
-        if (block.getType().equals(Material.TNT)) {
-            Data data = Chaos.getPlugin().getData();
-            data.setBlockOwner(block.getLocation(), e.getPlayer().getUniqueId());
-        }
-    }
-
-    @EventHandler
-    public void onTNTNormalChange(EntitySpawnEvent e) {
-        if (e.getEntity() instanceof TNTPrimed tnt) {
-            Data data = Chaos.getPlugin().getData();
-            if (data.hasBlockOwner(tnt.getLocation())) {
-                data.setEntityOwner(tnt.getUniqueId(), data.getBlockOwner(tnt.getLocation()));
-                data.removeBlockOwner(tnt.getLocation());
             }
         }
     }
