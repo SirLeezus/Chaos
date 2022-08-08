@@ -406,6 +406,7 @@ public class GameManager {
                 player.playerListName(BukkitUtils.parseColorComponent( prefix + player.getName()));
             }
         }
+        boardManager.setCollisionRule(CollisionRule.NEVER);
         data.setTeamNumber(data.getTeamNumber() + 1);
         String prefix = "&6[&a" + level + "&6] ";
         if (cacheManager.hasRank(uuid)) prefix = prefix + Rank.valueOf(cacheManager.getRank(uuid)).getPrefix() + " ";

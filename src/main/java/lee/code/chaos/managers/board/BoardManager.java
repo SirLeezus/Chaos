@@ -4,6 +4,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import lee.code.chaos.managers.CollisionRule;
 import org.bukkit.ChatColor;
 
 import java.util.Collection;
@@ -47,8 +48,8 @@ public class BoardManager extends AbstractBoard {
         return handle.getStrings().read(2);
     }
 
-    public void setCollisionRule(String value) {
-        handle.getStrings().write(2, value);
+    public void setCollisionRule(CollisionRule rule) {
+        structure.getStrings().write(1, rule.getSettings());
     }
 
     public void setPlayers(List<String> value) {
