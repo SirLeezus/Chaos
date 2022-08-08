@@ -38,3 +38,11 @@ commands:
     description: Removes a booster from queue.
     permission: chaos.command.removebooster
     usage: "/removebooster &f<id>"
+  setrank:
+    description: Sets a target player's rank.
+    permission: chaos.command.setrank
+    usage: "/setrank &f<player> <rank>"
+  removerank:
+    description: Removes a target player's rank.
+    permission: chaos.command.removerank
+    usage: "/removerank &f<player>"

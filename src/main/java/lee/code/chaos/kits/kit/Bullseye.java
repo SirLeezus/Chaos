@@ -27,7 +27,6 @@ public class Bullseye extends Kit {
 
     public Bullseye() {
         PU pu = Chaos.getPlugin().getPU();
-        kit.put(-1, new ItemStack(Material.SHIELD, 1));
         kit.put(0, new ItemStack(Material.GOLDEN_CARROT, 10));
         kit.put(1, new ItemStack(Material.BOW));
         kit.put(2, new ItemStack(Material.SPECTRAL_ARROW, 10));

@@ -15,15 +15,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Default extends Kit {
+public class Wonderwall extends Kit {
 
     private final Map<Integer, ItemStack> kit = new HashMap<>();
     private final ItemStack lockedPreview;
     private final ItemStack unlockedPreview;
     private final ItemStack selectedPreview;
 
-    public Default() {
+    public Wonderwall() {
         PU pu = Chaos.getPlugin().getPU();
+        kit.put(-1, new ItemStack(Material.SHIELD, 1));
         kit.put(0, Tool.IRON_SWORD.getItem());
         kit.put(1, new ItemStack(Material.BOW, 1));
         kit.put(2, new ItemStack(Material.ARROW, 30));
@@ -41,7 +42,7 @@ public class Default extends Kit {
         locked.setItemMeta(lockedMeta);
         lockedPreview = locked;
 
-        ItemStack unlocked = BukkitUtils.getItem(Material.IRON_AXE,
+        ItemStack unlocked = BukkitUtils.getItem(Material.SHIELD,
                 Lang.MENU_KIT_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
                 Lang.MENU_KIT_LORE_UNLOCKED.getString(null),
                 null,
@@ -51,7 +52,7 @@ public class Default extends Kit {
         unlocked.setItemMeta(unlockedMeta);
         unlockedPreview = unlocked;
 
-        ItemStack selected = BukkitUtils.getItem(Material.IRON_AXE,
+        ItemStack selected = BukkitUtils.getItem(Material.SHIELD,
                 Lang.MENU_KIT_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
                 Lang.MENU_KIT_LORE_SELECTED.getString(null),
                 null,
@@ -66,7 +67,7 @@ public class Default extends Kit {
 
     @Override
     public String name() {
-        return "default";
+        return "wonderwall";
     }
 
     @Override
@@ -91,6 +92,6 @@ public class Default extends Kit {
 
     @Override
     public long cost() {
-        return 0;
+        return 500;
     }
 }

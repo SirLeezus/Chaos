@@ -182,6 +182,7 @@ public class GameManager {
                 player.setFoodLevel(20);
                 player.setFireTicks(0);
                 for (PotionEffect potionEffect : player.getActivePotionEffects()) player.removePotionEffect(potionEffect.getType());
+                map.removeRespawningPlayer(uuid);
             });
             case RED -> player.teleportAsync(map.getRedSpawn()).thenAccept(result -> {
                 loadArmor(player);
@@ -190,6 +191,7 @@ public class GameManager {
                 player.setFoodLevel(20);
                 player.setFireTicks(0);
                 for (PotionEffect potionEffect : player.getActivePotionEffects()) player.removePotionEffect(potionEffect.getType());
+                map.removeRespawningPlayer(uuid);
             });
         }
     }
@@ -276,6 +278,7 @@ public class GameManager {
 
     private void loadKit(Player player) {
         Kit kit = Chaos.getPlugin().getCacheManager().getKit(player.getUniqueId());
+        player.getInventory().setItemInOffHand(new ItemStack(Material.AIR));
         for (Map.Entry<Integer, ItemStack> kItem : kit.inventory().entrySet()) {
             int slot = kItem.getKey();
             ItemStack item = kItem.getValue();
@@ -374,30 +377,39 @@ public class GameManager {
         UUID uuid = player.getUniqueId();
         Chaos plugin = Chaos.getPlugin();
         Data data = plugin.getData();
+        CacheManager cacheManager = plugin.getCacheManager();
         BoardManager boardManager = data.hasBoard(uuid) ? data.getBoardPacket(uuid) : new BoardManager(uuid);
         String level = plugin.getCacheManager().getDisplayLevel(uuid);
         switch (team) {
             case RED -> {
                 boardManager.setTeamName("R" + data.getTeamNumber());
                 boardManager.setColor(ChatColor.RED);
-                player.displayName(BukkitUtils.parseColorComponent( "&6[&a" + level + "&6] &c" + player.getName()));
-                player.playerListName(BukkitUtils.parseColorComponent( "&6[&a" + level + "&6] &c" + player.getName()));
+                String prefix = "&6[&a" + level + "&6] &c";
+                if (cacheManager.hasRank(uuid)) prefix = prefix + Rank.valueOf(cacheManager.getRank(uuid)).getPrefix() + " &c";
+                player.displayName(BukkitUtils.parseColorComponent( prefix + player.getName()));
+                player.playerListName(BukkitUtils.parseColorComponent( prefix + player.getName()));
             }
             case BLUE -> {
                 boardManager.setTeamName("B" + data.getTeamNumber());
                 boardManager.setColor(ChatColor.BLUE);
-                player.displayName(BukkitUtils.parseColorComponent( "&6[&a" + level + "&6] &9" + player.getName()));
-                player.playerListName(BukkitUtils.parseColorComponent( "&6[&a" + level + "&6] &9" + player.getName()));
+                String prefix = "&6[&a" + level + "&6] &9";
+                if (cacheManager.hasRank(uuid)) prefix = prefix + Rank.valueOf(cacheManager.getRank(uuid)).getPrefix() + " &9";
+                player.displayName(BukkitUtils.parseColorComponent( prefix + player.getName()));
+                player.playerListName(BukkitUtils.parseColorComponent( prefix + player.getName()));
             }
             case SPECTATOR -> {
                 boardManager.setTeamName("S" + data.getTeamNumber());
                 boardManager.setColor(ChatColor.YELLOW);
-                player.displayName(BukkitUtils.parseColorComponent( "&6[&a" + level + "&6] &e" + player.getName()));
-                player.playerListName(BukkitUtils.parseColorComponent( "&6[&a" + level + "&6] &e" + player.getName()));
+                String prefix = "&6[&a" + level + "&6] &e";
+                if (cacheManager.hasRank(uuid)) prefix = prefix + Rank.valueOf(cacheManager.getRank(uuid)).getPrefix() + " &e";
+                player.displayName(BukkitUtils.parseColorComponent(prefix + player.getName()));
+                player.playerListName(BukkitUtils.parseColorComponent( prefix + player.getName()));
             }
         }
         data.setTeamNumber(data.getTeamNumber() + 1);
-        boardManager.setPrefix(WrappedChatComponent.fromJson(BukkitUtils.serializeColorComponentJson("&6[&a" + level + "&6] ")));
+        String prefix = "&6[&a" + level + "&6] ";
+        if (cacheManager.hasRank(uuid)) prefix = prefix + Rank.valueOf(cacheManager.getRank(uuid)).getPrefix() + " ";
+        boardManager.setPrefix(WrappedChatComponent.fromJson(BukkitUtils.serializeColorComponentJson(prefix)));
         boardManager.setPlayers(Collections.singletonList(player.getName()));
         data.setBoardPacket(uuid, boardManager);
         if (delayed) {

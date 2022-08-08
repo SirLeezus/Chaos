@@ -24,7 +24,6 @@ public class HeavyHitter extends Kit {
 
     public HeavyHitter() {
         PU pu = Chaos.getPlugin().getPU();
-        kit.put(-1, new ItemStack(Material.SHIELD, 1));
         kit.put(0, Tool.DIAMOND_SWORD.getItem());
         kit.put(1, new ItemStack(Material.GOLDEN_APPLE, 1));
         kit.put(2, Tool.IRON_AXE.getItem());

@@ -27,7 +27,6 @@ public class NoMercy extends Kit {
 
     public NoMercy() {
         PU pu = Chaos.getPlugin().getPU();
-        kit.put(-1, new ItemStack(Material.SHIELD, 1));
         kit.put(0, new ItemStack(Material.SHEARS, 1));
         ItemStack speedPotion = new ItemStack(Material.POTION);
         PotionMeta speedPotionMeta = (PotionMeta) speedPotion.getItemMeta();

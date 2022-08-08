@@ -24,7 +24,6 @@ public class Demolitionist extends Kit {
 
     public Demolitionist() {
         PU pu = Chaos.getPlugin().getPU();
-        kit.put(-1, new ItemStack(Material.SHIELD, 1));
         kit.put(0, Tool.IRON_SWORD.getItem());
         kit.put(1, new ItemStack(Material.TNT, 3));
         kit.put(2, new ItemStack(Material.APPLE, 5));

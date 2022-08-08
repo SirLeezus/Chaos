@@ -24,6 +24,7 @@ public class MapData {
     private List<UUID> redTeam = new ArrayList<>();
     private List<UUID> blueTeam = new ArrayList<>();
     private List<UUID> spectators = new ArrayList<>();
+    private final List<UUID> respawningPlayers = new ArrayList<>();
 
     public void addRedTeam(UUID uuid) { redTeam.add(uuid); }
     public void removeRedTeam(UUID uuid) { redTeam.remove(uuid); }
@@ -33,6 +34,10 @@ public class MapData {
 
     public void addSpectator(UUID uuid) { spectators.add(uuid); }
     public void removeSpectator(UUID uuid) { spectators.remove(uuid); }
+
+    public void addRespawningPlayer(UUID uuid) { respawningPlayers.add(uuid); }
+    public void removeRespawningPlayer(UUID uuid) { respawningPlayers.remove(uuid); }
+    public boolean isRespawningPlayer(UUID uuid) { return respawningPlayers.contains(uuid); }
 
     public GameTeam getTeam(UUID uuid) {
         if (spectators.contains(uuid)) return GameTeam.SPECTATOR;

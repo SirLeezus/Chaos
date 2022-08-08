@@ -82,6 +82,10 @@ public class Chaos extends JavaPlugin {
         getCommand("booster").setTabCompleter(new BoosterTab());
         getCommand("removebooster").setExecutor(new RemoveBoosterCMD());
         getCommand("removebooster").setTabCompleter(new RemoveBoosterTab());
+        getCommand("setrank").setExecutor(new SetRankCMD());
+        getCommand("setrank").setTabCompleter(new SetRankTab());
+        getCommand("removerank").setExecutor(new RemoveRankCMD());
+        getCommand("removerank").setTabCompleter(new RemoveRankTab());
     }
 
     public static Chaos getPlugin() {

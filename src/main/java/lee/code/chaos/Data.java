@@ -7,6 +7,7 @@ import lee.code.chaos.kits.Kit;
 import lee.code.chaos.kits.kit.*;
 import lee.code.chaos.lists.GameState;
 import lee.code.chaos.lists.Lang;
+import lee.code.chaos.lists.Rank;
 import lee.code.chaos.managers.GameManager;
 import lee.code.chaos.managers.WorldManager;
 import lee.code.chaos.managers.board.BoardManager;
@@ -43,6 +44,7 @@ public class Data {
     @Getter @Setter private int teamNumber = 0;
 
     @Getter private final List<NamespacedKey> recipeKeys = new ArrayList<>();
+    @Getter private final List<String> rankKeys = new ArrayList<>();
 
     private final ConcurrentHashMap<Location, UUID> blockOwner = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, UUID> entityOwner = new ConcurrentHashMap<>();
@@ -192,6 +194,9 @@ public class Data {
         scheduleTabListUpdater();
         scheduleHeathChecker();
 
+        //rank keys
+        rankKeys.addAll(EnumSet.allOf(Rank.class).stream().map(Rank::name).toList());
+
         //remove recipes
         List<Material> removedRecipes = new ArrayList<>(EnumSet.allOf(Tool.class).stream().map(Tool::getMaterial).toList());
         Iterator<Recipe> it = Bukkit.getServer().recipeIterator();
@@ -238,6 +243,8 @@ public class Data {
         gameKits.put(heavyHitter.name(), heavyHitter);
         Kit noMercy = new NoMercy();
         gameKits.put(noMercy.name(), noMercy);
+        Kit wonderwall = new Wonderwall();
+        gameKits.put(wonderwall.name(), wonderwall);
         Kit deepDive = new DeepDive();
         gameKits.put(deepDive.name(), deepDive);
         Kit engineer = new Engineer();

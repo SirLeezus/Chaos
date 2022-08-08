@@ -24,7 +24,6 @@ public class Enchanter extends Kit {
 
     public Enchanter() {
         PU pu = Chaos.getPlugin().getPU();
-        kit.put(-1, new ItemStack(Material.SHIELD, 1));
         kit.put(0, new ItemStack(Material.ENCHANTING_TABLE, 1));
         kit.put(1, new ItemStack(Material.EXPERIENCE_BOTTLE, 3));
         kit.put(2, Tool.IRON_SWORD.getItem());

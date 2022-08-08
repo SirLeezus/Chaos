@@ -24,7 +24,6 @@ public class ConstructionWorker extends Kit {
 
     public ConstructionWorker() {
         PU pu = Chaos.getPlugin().getPU();
-        kit.put(-1, new ItemStack(Material.SHIELD, 1));
         kit.put(0, new ItemStack(Material.COOKED_BEEF, 15));
         kit.put(1, Tool.IRON_PICKAXE.getItem());
         kit.put(2, new ItemStack(Material.BRICKS, 64));

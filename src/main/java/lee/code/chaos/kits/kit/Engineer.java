@@ -24,7 +24,6 @@ public class Engineer extends Kit {
 
     public Engineer() {
         PU pu = Chaos.getPlugin().getPU();
-        kit.put(-1, new ItemStack(Material.SHIELD, 1));
         kit.put(0, new ItemStack(Material.REDSTONE, 30));
         kit.put(1, new ItemStack(Material.STICKY_PISTON, 3));
         kit.put(2, new ItemStack(Material.PISTON, 3));

@@ -24,7 +24,6 @@ public class TripleShot extends Kit {
 
     public TripleShot() {
         PU pu = Chaos.getPlugin().getPU();
-        kit.put(-1, new ItemStack(Material.SHIELD, 1));
         kit.put(0, Tool.IRON_SWORD.getItem());
         ItemStack crossBow = new ItemStack(Material.CROSSBOW);
         ItemMeta crossBowMeta = crossBow.getItemMeta();

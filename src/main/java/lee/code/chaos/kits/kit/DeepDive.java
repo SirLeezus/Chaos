@@ -24,7 +24,6 @@ public class DeepDive extends Kit {
 
     public DeepDive() {
         PU pu = Chaos.getPlugin().getPU();
-        kit.put(-1, new ItemStack(Material.SHIELD, 1));
         ItemStack trident = Tool.TRIDENT.getItem();
         ItemMeta tridentMeta = trident.getItemMeta();
         tridentMeta.addEnchant(Enchantment.LOYALTY, 3, false);

@@ -90,6 +90,8 @@ public enum Lang {
     COMMAND_STATS_GAMES_LINE("&e&lGames Played&7: &2{0}"),
     COMMAND_BOOSTER_ADD_SUCCESSFUL("&a{0}'s Drops x{1} Booster has been queued."),
     COMMAND_BOOSTER_ID_HOVER("&9&lID&7: &e{0}"),
+    COMMAND_RANKSET_SUCCESSFUL("&aThe rank &6{0} &awas successfully set for the player &6{1}&a!"),
+    COMMAND_REMOVERANK_SUCCESSFUL("&aYou successfully removed &6{0}'s rank!"),
     COMMAND_BOOSTER_TITLE("&a------------------ &e[ &2&lBoosters &e] &a------------------"),
     COMMAND_BOOSTER_ACTIVE("&b&lActive&7: &#f5a802Coins x{0} Booster &b| &6{1} &b| {2}"),
     COMMAND_BOOSTER_QUEUE("&3{0}&b. &#f5a802Coins x{1} Booster &b| &6{2}"),

@@ -9,6 +9,7 @@ import lee.code.chaos.menusystem.menus.KillStreakMenu;
 import lee.code.chaos.menusystem.menus.KitMenu;
 import lee.code.chaos.menusystem.menus.TeamMenu;
 import lee.code.core.util.bukkit.BukkitUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -26,6 +27,20 @@ import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import java.util.UUID;
 
 public class SpectatorListener implements Listener {
+
+    @EventHandler
+    public void onVoidDeath(PlayerMoveEvent e) {
+        if (e.getTo().getBlockY() <= 0) {
+            Chaos plugin = Chaos.getPlugin();
+            Data data = plugin.getData();
+            MapData map = data.getActiveMap().getData();
+            Player player = e.getPlayer();
+            UUID uuid = player.getUniqueId();
+            if (map.getSpectators().contains(uuid)) {
+                player.teleportAsync(map.getSpawn());
+            }
+        }
+    }
 
     @EventHandler
     public void onSpectatorEntityDamage(EntityDamageByEntityEvent e) {

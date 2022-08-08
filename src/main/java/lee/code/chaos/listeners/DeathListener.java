@@ -17,21 +17,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.LinkedList;
 import java.util.UUID;
 
 public class DeathListener implements Listener {
-
-    @EventHandler
-    public void onVoidDeath(PlayerMoveEvent e) {
-        if (e.getTo().getBlockY() <= 60) {
-            Player player = e.getPlayer();
-            respawnPlayer(player, null);
-        }
-    }
 
     @EventHandler
     public void onDamageByEntity(EntityDamageByEntityEvent e) {
@@ -95,6 +86,7 @@ public class DeathListener implements Listener {
                 UUID uuid = player.getUniqueId();
                 if (!map.getSpectators().contains(uuid)) {
                     if (map.getTeam(data.getLastPlayerDamage(uuid)).equals(map.getTeam(uuid))) {
+                        data.removeLastPlayerDamage(uuid);
                         e.setCancelled(true);
                         return;
                     }
@@ -103,6 +95,13 @@ public class DeathListener implements Listener {
                             e.setCancelled(true);
                             Player attacker = Bukkit.getPlayer(data.getLastPlayerDamage(uuid));
                             respawnPlayer(player, attacker);
+                            data.removeLastPlayerDamage(uuid);
+                        }
+                    } else if (e.getDamage() >= player.getHealth() && e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
+                        e.setCancelled(true);
+                        if (!map.isRespawningPlayer(uuid)) {
+                            map.addRespawningPlayer(uuid);
+                            respawnPlayer(player, Bukkit.getPlayer(data.getLastPlayerDamage(uuid)));
                             data.removeLastPlayerDamage(uuid);
                         }
                     }
