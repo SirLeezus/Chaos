@@ -1,8 +1,8 @@
 package lee.code.chaos;
 
+import lee.code.chaos.database.CacheManager;
 import lee.code.chaos.killstreaks.KillStreak;
 import lee.code.chaos.kits.Kit;
-import lee.code.chaos.lists.GameTeam;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.maps.MapData;
 import lee.code.core.util.bukkit.BukkitUtils;
@@ -13,7 +13,6 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
-import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -58,10 +57,12 @@ public class PU {
     }
 
     public void sendCoinReward(UUID uuid, long amount) {
+        CacheManager cacheManager = Chaos.getPlugin().getCacheManager();
         Player target = Bukkit.getPlayer(uuid);
         if (target != null && target.isOnline()) {
             playRewardSound(target);
-            target.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COIN_REWARD.getComponent(new String[] { BukkitUtils.parseValue(amount) })));
+            if (cacheManager.isBoosterActive()) target.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COIN_REWARD_BOOSTER.getComponent(new String[] { BukkitUtils.parseValue(amount), String.valueOf(cacheManager.getBoosterMultiplier(cacheManager.getActiveBoosterID())) })));
+            else target.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.COIN_REWARD.getComponent(new String[] { BukkitUtils.parseValue(amount) })));
         }
     }
 
@@ -115,5 +116,28 @@ public class PU {
         boolean blue = location.distanceSquared(blueSpawn) <= radius * radius;
         boolean spawn = location.distanceSquared(gameSpawn) <= radius * radius;
         return red || blue || spawn;
+    }
+
+    public void scheduleBoosterChecker() {
+        Chaos plugin = Chaos.getPlugin();
+        CacheManager cacheManager = plugin.getCacheManager();
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            if (cacheManager.areBoosters()) {
+                int id = cacheManager.getActiveBoosterID() != 0 ? cacheManager.getActiveBoosterID() : cacheManager.getNextBoosterQueueID();
+                long time = cacheManager.getBoosterTime(id);
+                int multiplier = cacheManager.getBoosterMultiplier(id);
+                String name = cacheManager.getBoosterPlayerName(id);
+                if (cacheManager.isBoosterActive()) {
+                    if (time < 0) {
+                        cacheManager.removeBooster(id);
+                        Bukkit.getServer().sendMessage(Lang.ANNOUNCEMENT.getComponent(null).append(Lang.BROADCAST_BOOSTER_ENDED.getComponent(new String[] { String.valueOf(multiplier), name })));
+                    }
+                } else if (id != 0) {
+                    cacheManager.setBoosterActive(id, true);
+                    Bukkit.getServer().sendMessage(Lang.ANNOUNCEMENT.getComponent(null).append(Lang.BROADCAST_BOOSTER_STARTED.getComponent(new String[] { String.valueOf(multiplier), name })));
+                }
+            }
+        }), 0L, 20L);
     }
 }

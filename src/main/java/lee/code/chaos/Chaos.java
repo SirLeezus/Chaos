@@ -38,6 +38,7 @@ public class Chaos extends JavaPlugin {
         databaseManager.initialize();
         permissionManager.loadPerms();
         data.load();
+        pU.scheduleBoosterChecker();
         registerListeners();
         registerCommands();
     }
@@ -75,6 +76,12 @@ public class Chaos extends JavaPlugin {
         getCommand("kits").setTabCompleter(new KitsTab());
         getCommand("killstreaks").setExecutor(new KillStreaksCMD());
         getCommand("killstreaks").setTabCompleter(new KillStreakTab());
+        getCommand("addbooster").setExecutor(new AddBoosterCMD());
+        getCommand("addbooster").setTabCompleter(new AddBoosterTab());
+        getCommand("booster").setExecutor(new BoosterCMD());
+        getCommand("booster").setTabCompleter(new BoosterTab());
+        getCommand("removebooster").setExecutor(new RemoveBoosterCMD());
+        getCommand("removebooster").setTabCompleter(new RemoveBoosterTab());
     }
 
     public static Chaos getPlugin() {

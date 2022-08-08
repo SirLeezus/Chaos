@@ -75,6 +75,7 @@ public class PermissionManager {
         defaultPerms.add("chaos.kit.default");
         defaultPerms.add("chaos.command.kits");
         defaultPerms.add("chaos.command.killstreaks");
+        defaultPerms.add("chaos.command.booster");
 
         // staff
         staffPerms.add("chaos.command.admin");

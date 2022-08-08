@@ -116,12 +116,18 @@ public class Data {
     }
     public void addPlayerKill(UUID uuid) {
         CacheManager cacheManager = Chaos.getPlugin().getCacheManager();
+        long coins = cacheManager.getCoins(uuid) + 5;
+        if (cacheManager.isBoosterActive()) {
+            int id = cacheManager.getActiveBoosterID();
+            int multiplier = cacheManager.getBoosterMultiplier(id);
+            coins = coins - 5 + (5L * multiplier);
+        }
         ScoreData scoreData = getPlayerScoreData(uuid);
         scoreData.setKills(scoreData.getKills() + 1);
         scoreData.setKillStreak(scoreData.getKillStreak() + 1);
         cacheManager.setKills(uuid, cacheManager.getKills(uuid) + 1);
         cacheManager.setLevel(uuid, cacheManager.getLevel(uuid) + 200);
-        cacheManager.setCoins(uuid, cacheManager.getCoins(uuid) + 5);
+        cacheManager.setCoins(uuid, coins);
         if (scoreData.getKillStreak() > cacheManager.getLongestKillStreak(uuid)) cacheManager.setLongestKillStreak(uuid, scoreData.getKillStreak());
         activeBoardPackets.get(uuid).sendSidebarPacket();
     }
@@ -136,18 +142,30 @@ public class Data {
     public void resetPlayerScores() { playerScore.clear(); }
     public void addBluePoint(UUID uuid) {
         CacheManager cacheManager = Chaos.getPlugin().getCacheManager();
+        long coins = cacheManager.getCoins(uuid) + 10;
+        if (cacheManager.isBoosterActive()) {
+            int id = cacheManager.getActiveBoosterID();
+            int multiplier = cacheManager.getBoosterMultiplier(id);
+            coins = coins - 10 + (10L * multiplier);
+        }
         activeMap.getData().setBlueScore(activeMap.getData().getBlueScore() + 1);
         cacheManager.setWoolBroken(uuid, cacheManager.getWoolBroken(uuid) + 1);
         cacheManager.setLevel(uuid, cacheManager.getLevel(uuid) + 500);
-        cacheManager.setCoins(uuid, cacheManager.getCoins(uuid) + 10);
+        cacheManager.setCoins(uuid, coins);
         activeBoardPackets.get(uuid).broadcastSidebarPacket();
     }
     public void addRedPoint(UUID uuid) {
         CacheManager cacheManager = Chaos.getPlugin().getCacheManager();
+        long coins = cacheManager.getCoins(uuid) + 10;
+        if (cacheManager.isBoosterActive()) {
+            int id = cacheManager.getActiveBoosterID();
+            int multiplier = cacheManager.getBoosterMultiplier(id);
+            coins = coins - 10 + (10L * multiplier);
+        }
         activeMap.getData().setRedScore(activeMap.getData().getRedScore() + 1);
         cacheManager.setWoolBroken(uuid, cacheManager.getWoolBroken(uuid) + 1);
         cacheManager.setLevel(uuid, cacheManager.getLevel(uuid) + 500);
-        cacheManager.setCoins(uuid, cacheManager.getCoins(uuid) + 10);
+        cacheManager.setCoins(uuid, coins);
         activeBoardPackets.get(uuid).broadcastSidebarPacket();
     }
 

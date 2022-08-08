@@ -26,3 +26,15 @@ commands:
     description: Open the kill streak menu.
     permission: chaos.command.killstreaks
     usage: "/killstreaks"
+  addbooster:
+    description: Add a coin booster.
+    permission: chaos.command.addbooster
+    usage: "/addbooster &f<player> <time> <multiplier>"
+  booster:
+    description: Checks booster status.
+    permission: chaos.command.booster
+    usage: "/booster"
+  removebooster:
+    description: Removes a booster from queue.
+    permission: chaos.command.removebooster
+    usage: "/removebooster &f<id>"

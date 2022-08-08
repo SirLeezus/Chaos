@@ -1,6 +1,7 @@
 package lee.code.chaos.database;
 
 import lee.code.chaos.Chaos;
+import lee.code.chaos.database.tables.BoosterTable;
 import lee.code.chaos.database.tables.PlayerTable;
 import lee.code.core.ormlite.dao.Dao;
 import lee.code.core.ormlite.dao.DaoManager;
@@ -21,6 +22,7 @@ import java.util.UUID;
 public class DatabaseManager {
 
     private Dao<PlayerTable, UUID> playerDao;
+    private Dao<BoosterTable, Integer> boosterDao;
 
     @Getter(AccessLevel.NONE)
     private ConnectionSource connectionSource;
@@ -56,6 +58,12 @@ public class DatabaseManager {
         //load player data into cache
         for (PlayerTable playerTable : playerDao.queryForAll()) cacheManager.setPlayerData(playerTable);
 
+        //booster data
+        TableUtils.createTableIfNotExists(connectionSource, BoosterTable.class);
+        boosterDao = DaoManager.createDao(connectionSource, BoosterTable.class);
+        //booster punishment data into cache
+        for (BoosterTable boosterTable : boosterDao.queryForAll()) cacheManager.setBoosterData(boosterTable);
+
     }
 
     public void closeConnection() {
@@ -80,6 +88,36 @@ public class DatabaseManager {
         Bukkit.getScheduler().runTaskAsynchronously(Chaos.getPlugin(), () -> {
             try {
                 playerDao.update(playerTable);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public synchronized void createBoosterTable(BoosterTable boosterTable) {
+        Bukkit.getScheduler().runTaskAsynchronously(Chaos.getPlugin(), () -> {
+            try {
+                boosterDao.create(boosterTable);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public synchronized void updateBoosterTable(BoosterTable boosterTable) {
+        Bukkit.getScheduler().runTaskAsynchronously(Chaos.getPlugin(), () -> {
+            try {
+                boosterDao.update(boosterTable);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public synchronized void deleteBoosterTable(BoosterTable boosterTable) {
+        Bukkit.getScheduler().runTaskAsynchronously(Chaos.getPlugin(), () -> {
+            try {
+                boosterDao.delete(boosterTable);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -4,14 +4,18 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lee.code.chaos.Chaos;
 import lee.code.chaos.PU;
+import lee.code.chaos.database.tables.BoosterTable;
 import lee.code.chaos.database.tables.PlayerTable;
 import lee.code.chaos.killstreaks.KillStreak;
 import lee.code.chaos.kits.Kit;
 import lee.code.core.util.bukkit.BukkitUtils;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
+import org.bukkit.Bukkit;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class CacheManager {
 
@@ -22,6 +26,99 @@ public class CacheManager {
             .recordStats()
             .build();
 
+    @Getter
+    private final Cache<Integer, BoosterTable> boosterCache = CacheBuilder
+            .newBuilder()
+            .initialCapacity(5000)
+            .recordStats()
+            .build();
+
+    //boosters
+
+    public void setBoosterData(BoosterTable boosterTable) {
+        getBoosterCache().put(boosterTable.getId(), boosterTable);
+    }
+
+    private BoosterTable getBoosterTable(int id) {
+        return getBoosterCache().getIfPresent(id);
+    }
+
+    private void updateBoosterTable(BoosterTable boosterTable) {
+        getBoosterCache().put(boosterTable.getId(), boosterTable);
+        Chaos.getPlugin().getDatabaseManager().updateBoosterTable(boosterTable);
+    }
+
+    public void createBoosterData(int id, UUID uuid, int multiplier, long time, boolean active, long duration) {
+        BoosterTable boosterTable = new BoosterTable(id, uuid, multiplier, time, active, duration);
+        getBoosterCache().put(boosterTable.getId(), boosterTable);
+        Chaos.getPlugin().getDatabaseManager().createBoosterTable(boosterTable);
+    }
+
+    public void queueBooster(UUID uuid, int multiplier, long duration) {
+        createBoosterData(getNextBoosterID(), uuid, multiplier, 0, false, duration);
+    }
+
+    private int getNextBoosterID() {
+        if (getBoosterCache().asMap().isEmpty()) return 1;
+        else return Collections.max(getBoosterCache().asMap().keySet()) + 1;
+    }
+
+    public boolean areBoosters() {
+        return !getBoosterCache().asMap().isEmpty();
+    }
+
+    public boolean isBoosterActive() {
+        return getBoosterCache().asMap().values().stream().anyMatch(BoosterTable::isActive);
+    }
+    public int getNextBoosterQueueID() {
+        return Collections.min(getBoosterCache().asMap().keySet());
+    }
+
+    public List<Integer> getBoosterIDList() {
+        return new ArrayList<>(getBoosterCache().asMap().keySet());
+    }
+
+    public List<String> getBoosterIDStringList() {
+        return getBoosterCache().asMap().keySet().stream().map(String::valueOf).sorted().collect(Collectors.toList());
+    }
+
+    public long getBoosterTime(int id) {
+        return getBoosterTable(id).getTime() - TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
+    }
+
+    public int getBoosterMultiplier(int id) {
+        return getBoosterTable(id).getMultiplier();
+    }
+
+    public long getBoosterDuration(int id) {
+        return getBoosterTable(id).getDuration();
+    }
+
+    public String getBoosterPlayerName(int id) {
+        return Bukkit.getOfflinePlayer(getBoosterTable(id).getPlayer()).getName();
+    }
+
+    public void setBoosterActive(int id, boolean isActive) {
+        BoosterTable boosterTable = getBoosterTable(id);
+        boosterTable.setActive(isActive);
+        boosterTable.setTime(TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis()) + boosterTable.getDuration());
+        updateBoosterTable(boosterTable);
+    }
+
+    public void removeBooster(int id) {
+        BoosterTable boosterTable = getBoosterTable(id);
+        Chaos.getPlugin().getDatabaseManager().deleteBoosterTable(boosterTable);
+        getBoosterCache().invalidate(id);
+    }
+
+    public int getActiveBoosterID() {
+        List<BoosterTable> booster = getBoosterCache().asMap().values().stream().filter(BoosterTable::isActive).toList();
+        if (booster.isEmpty()) return 0;
+        else return booster.get(0).getId();
+    }
+
+
+    //player data
     public boolean hasPlayerData(UUID uuid) {
         return getPlayerCache().getIfPresent(uuid) != null;
     }
