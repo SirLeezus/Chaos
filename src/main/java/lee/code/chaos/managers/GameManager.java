@@ -197,23 +197,18 @@ public class GameManager {
     public void teleportPlayerSpawn(Player player) {
         MapData map = Chaos.getPlugin().getData().getActiveMap().getData();
         UUID uuid = player.getUniqueId();
+        map.removeSpectator(uuid);
         switch (map.getTeam(uuid)) {
-            case BLUE -> {
-                map.removeSpectator(uuid);
-                player.teleportAsync(map.getBlueSpawn()).thenAccept(result -> {
-                    loadPlayerDefaults(player);
-                    showSpectator(player);
-                    hideSpectatorFromPlayer(player);
-                });
-            }
-            case RED -> {
-                map.removeSpectator(uuid);
-                player.teleportAsync(map.getRedSpawn()).thenAccept(result -> {
-                    loadPlayerDefaults(player);
-                    showSpectator(player);
-                    hideSpectatorFromPlayer(player);
-                });
-            }
+            case BLUE -> player.teleportAsync(map.getBlueSpawn()).thenAccept(result -> {
+                loadPlayerDefaults(player);
+                showSpectator(player);
+                hideSpectatorFromPlayer(player);
+            });
+            case RED -> player.teleportAsync(map.getRedSpawn()).thenAccept(result -> {
+                loadPlayerDefaults(player);
+                showSpectator(player);
+                hideSpectatorFromPlayer(player);
+            });
         }
     }
 

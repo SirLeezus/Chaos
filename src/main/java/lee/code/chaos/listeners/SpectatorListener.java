@@ -13,14 +13,108 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityPlaceEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.event.vehicle.VehicleDestroyEvent;
 
 import java.util.UUID;
 
 public class SpectatorListener implements Listener {
+
+    @EventHandler
+    public void onSpectatorEntityDamage(EntityDamageByEntityEvent e) {
+        if (e.getDamager() instanceof Player player) {
+            Data data = Chaos.getPlugin().getData();
+            MapData map = data.getActiveMap().getData();
+            if (map.getSpectators().contains(player.getUniqueId()) || data.getGameState().equals(GameState.TRANSITIONING)) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSpectatorEntityInteract(PlayerInteractEntityEvent e) {
+        Data data = Chaos.getPlugin().getData();
+        MapData map = data.getActiveMap().getData();
+        if (map.getSpectators().contains(e.getPlayer().getUniqueId()) || data.getGameState().equals(GameState.TRANSITIONING)) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onSpectatorBlockBreak(BlockBreakEvent e) {
+        Data data = Chaos.getPlugin().getData();
+        MapData map = data.getActiveMap().getData();
+        if (map.getSpectators().contains(e.getPlayer().getUniqueId()) || data.getGameState().equals(GameState.TRANSITIONING)) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onHangingEntityBreak(HangingBreakByEntityEvent e) {
+        if (e.getRemover() instanceof Player player) {
+            Data data = Chaos.getPlugin().getData();
+            MapData map = data.getActiveMap().getData();
+            if (map.getSpectators().contains(player.getUniqueId()) || data.getGameState().equals(GameState.TRANSITIONING)) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSpectatorVehicleBreak(VehicleDestroyEvent e) {
+        if (e.getAttacker() instanceof Player player) {
+            Data data = Chaos.getPlugin().getData();
+            MapData map = data.getActiveMap().getData();
+            if (map.getSpectators().contains(player.getUniqueId()) || data.getGameState().equals(GameState.TRANSITIONING)) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSpectatorBucketEmpty(PlayerBucketEmptyEvent e) {
+        Data data = Chaos.getPlugin().getData();
+        MapData map = data.getActiveMap().getData();
+        if (map.getSpectators().contains(e.getPlayer().getUniqueId()) || data.getGameState().equals(GameState.TRANSITIONING)) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onSpectatorBlockPlace(BlockPlaceEvent e) {
+        Data data = Chaos.getPlugin().getData();
+        MapData map = data.getActiveMap().getData();
+        if (map.getSpectators().contains(e.getPlayer().getUniqueId()) || data.getGameState().equals(GameState.TRANSITIONING)) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onSpectatorEntityBlockPlace(EntityPlaceEvent e) {
+        if (e.getEntity() instanceof Player player) {
+            Data data = Chaos.getPlugin().getData();
+            MapData map = data.getActiveMap().getData();
+            if (map.getSpectators().contains(player.getUniqueId()) || data.getGameState().equals(GameState.TRANSITIONING)) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onSpectatorArmorStandInteract(PlayerInteractAtEntityEvent e) {
+        Data data = Chaos.getPlugin().getData();
+        MapData map = data.getActiveMap().getData();
+        if (map.getSpectators().contains(e.getPlayer().getUniqueId()) || data.getGameState().equals(GameState.TRANSITIONING)) {
+            e.setCancelled(true);
+        }
+    }
 
     @EventHandler
     public void onSpectatorDamage(EntityDamageEvent e) {

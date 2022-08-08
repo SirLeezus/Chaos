@@ -4,18 +4,19 @@ import lee.code.chaos.Chaos;
 import lee.code.chaos.Data;
 import lee.code.chaos.lists.GameState;
 import lee.code.core.util.bukkit.BukkitUtils;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.FallingBlock;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -91,6 +92,48 @@ public class KitListener implements Listener {
                     e.setCancelled(true);
                     fallingBlock.remove();
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onFireChargeThrow(PlayerInteractEvent e) {
+        Chaos plugin = Chaos.getPlugin();
+        Data data = plugin.getData();
+        if (data.getGameState().equals(GameState.ACTIVE)) {
+            Player player = e.getPlayer();
+            UUID uuid = player.getUniqueId();
+            if (e.getAction().isLeftClick() && player.getInventory().getItemInMainHand().getType().equals(Material.FIRE_CHARGE)) {
+                e.setCancelled(true);
+                if (BukkitUtils.hasClickDelay(player)) return;
+                BukkitUtils.removePlayerItems(player, new ItemStack(Material.FIRE_CHARGE), 1, true);
+                Location eye = player.getEyeLocation();
+                Location loc = eye.add(eye.getDirection().multiply(1.2));
+                Fireball fireball = (Fireball) loc.getWorld().spawnEntity(loc, EntityType.FIREBALL);
+                fireball.setVelocity(loc.getDirection().normalize().multiply(2));
+                fireball.setShooter(player);
+                data.setEntityOwner(fireball.getUniqueId(), uuid);
+                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GHAST_SHOOT, (float) 0.5, (float) 0.5);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onTNTPlaceEvent(BlockPlaceEvent e) {
+        Block block = e.getBlock();
+        if (block.getType().equals(Material.TNT)) {
+            Data data = Chaos.getPlugin().getData();
+            data.setBlockOwner(block.getLocation(), e.getPlayer().getUniqueId());
+        }
+    }
+
+    @EventHandler
+    public void onTNTNormalChange(EntitySpawnEvent e) {
+        if (e.getEntity() instanceof TNTPrimed tnt) {
+            Data data = Chaos.getPlugin().getData();
+            if (data.hasBlockOwner(tnt.getLocation())) {
+                data.setEntityOwner(tnt.getUniqueId(), data.getBlockOwner(tnt.getLocation()));
+                data.removeBlockOwner(tnt.getLocation());
             }
         }
     }

@@ -9,11 +9,15 @@ import lee.code.chaos.managers.GameManager;
 import lee.code.chaos.maps.MapData;
 import lee.code.chaos.menusystem.Menu;
 import lee.code.chaos.menusystem.PlayerMU;
+import lee.code.core.util.bukkit.BukkitUtils;
 import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
 
@@ -51,28 +55,32 @@ public class TeamMenu extends Menu {
             return;
         }
 
-        if (clickedItem.equals(blueTeam)) {
-            playClickSound(player);
-            if (map.getBlueTeam().size() > map.getRedTeam().size()) {
-                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_JOIN_FILLED.getComponent(new String[] { Lang.BLUE_TEAM.getString(null) })));
-                return;
+        switch (e.getSlot()) {
+            case 2 -> {
+                playClickSound(player);
+                if (map.getBlueTeam().size() > map.getRedTeam().size()) {
+                    player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_JOIN_FILLED.getComponent(new String[] { Lang.BLUE_TEAM.getString(null) })));
+                    return;
+                }
+                map.addBlueTeam(uuid);
+                gameManager.updateDisplayName(player, GameTeam.BLUE, false);
+                if (data.getGameState().equals(GameState.ACTIVE)) gameManager.teleportPlayerSpawn(player);
+                Bukkit.getServer().sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_JOINED_TEAM.getComponent(new String[] { Lang.BLUE_COLOR.getString(null), player.getName(), Lang.BLUE_TEAM.getString(null) })));
+                inventory.close();
             }
-            map.addBlueTeam(uuid);
-            gameManager.updateDisplayName(player, GameTeam.BLUE, false);
-            if (data.getGameState().equals(GameState.ACTIVE)) gameManager.teleportPlayerSpawn(player);
-            player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_JOINED_TEAM.getComponent(new String[] { Lang.BLUE_TEAM.getString(null) })));
-            inventory.close();
-        } else if (clickedItem.equals(redTeam)) {
-            playClickSound(player);
-            if (map.getRedTeam().size() > map.getBlueTeam().size()) {
-                player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_JOIN_FILLED.getComponent(new String[] { Lang.RED_TEAM.getString(null) })));
-                return;
+
+            case 6 -> {
+                playClickSound(player);
+                if (map.getRedTeam().size() > map.getBlueTeam().size()) {
+                    player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_JOIN_FILLED.getComponent(new String[] { Lang.RED_TEAM.getString(null) })));
+                    return;
+                }
+                map.addRedTeam(uuid);
+                gameManager.updateDisplayName(player, GameTeam.RED, false);
+                if (data.getGameState().equals(GameState.ACTIVE)) gameManager.teleportPlayerSpawn(player);
+                Bukkit.getServer().sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_JOINED_TEAM.getComponent(new String[] { Lang.RED_COLOR.getString(null), player.getName(), Lang.RED_TEAM.getString(null) })));
+                inventory.close();
             }
-            map.addRedTeam(uuid);
-            gameManager.updateDisplayName(player, GameTeam.RED, false);
-            if (data.getGameState().equals(GameState.ACTIVE)) gameManager.teleportPlayerSpawn(player);
-            player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_JOINED_TEAM.getComponent(new String[] { Lang.RED_TEAM.getString(null) })));
-            inventory.close();
         }
     }
 
@@ -82,5 +90,36 @@ public class TeamMenu extends Menu {
 
         inventory.setItem(2, blueTeam);
         inventory.setItem(6, redTeam);
+        scheduleUpdateTeamPlayers(pmu.getOwner());
+    }
+
+    private void scheduleUpdateTeamPlayers(Player player) {
+        Chaos plugin = Chaos.getPlugin();
+        Data data = plugin.getData();
+        MapData map = data.getActiveMap().getData();
+        UUID uuid = player.getUniqueId();
+
+        if (!data.hasTeamMenuTask(uuid)) {
+            data.setTeamMenuTask(uuid, new BukkitRunnable() {
+                @Override
+                public void run() {
+                    int blue = map.getBlueTeam().size();
+                    int red = map.getRedTeam().size();
+
+                    ItemStack blueItem = new ItemStack(blueTeam);
+                    ItemMeta blueItemMeta = blueItem.getItemMeta();
+                    BukkitUtils.setItemLore(blueItemMeta, Lang.MENU_TEAMS_ITEM_LORE.getString(new String[] { String.valueOf(blue), String.valueOf(50) }));
+                    blueItem.setItemMeta(blueItemMeta);
+
+                    ItemStack redItem = new ItemStack(redTeam);
+                    ItemMeta redItemMeta = redItem.getItemMeta();
+                    BukkitUtils.setItemLore(redItemMeta, Lang.MENU_TEAMS_ITEM_LORE.getString(new String[] { String.valueOf(red), String.valueOf(50) }));
+                    redItem.setItemMeta(redItemMeta);
+
+                    inventory.setItem(2, blueItem);
+                    inventory.setItem(6, redItem);
+                }
+            }.runTaskTimer(plugin, 1L, 20L).getTaskId());
+        }
     }
 }

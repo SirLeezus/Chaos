@@ -7,11 +7,8 @@ import lee.code.chaos.lists.GameTeam;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.maps.MapData;
 import lee.code.core.util.bukkit.BukkitUtils;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -62,28 +59,6 @@ public class KillStreakListener implements Listener {
                         e.setCancelled(true);
                     }
                 }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onFireChargeThrow(PlayerInteractEvent e) {
-        Chaos plugin = Chaos.getPlugin();
-        Data data = plugin.getData();
-        if (data.getGameState().equals(GameState.ACTIVE)) {
-            Player player = e.getPlayer();
-            UUID uuid = player.getUniqueId();
-            if (e.getAction().isLeftClick() && player.getInventory().getItemInMainHand().getType().equals(Material.FIRE_CHARGE)) {
-                e.setCancelled(true);
-                if (BukkitUtils.hasClickDelay(player)) return;
-                BukkitUtils.removePlayerItems(player, new ItemStack(Material.FIRE_CHARGE), 1, true);
-                Location eye = player.getEyeLocation();
-                Location loc = eye.add(eye.getDirection().multiply(1.2));
-                Fireball fireball = (Fireball) loc.getWorld().spawnEntity(loc, EntityType.FIREBALL);
-                fireball.setVelocity(loc.getDirection().normalize().multiply(2));
-                fireball.setShooter(player);
-                data.setEntityOwner(fireball.getUniqueId(), uuid);
-                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GHAST_SHOOT, (float) 0.5, (float) 0.5);
             }
         }
     }

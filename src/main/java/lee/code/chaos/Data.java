@@ -23,10 +23,7 @@ import lee.code.chaos.recipes.CraftingRecipe;
 import lee.code.core.util.bukkit.BukkitUtils;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 
@@ -47,6 +44,7 @@ public class Data {
 
     @Getter private final List<NamespacedKey> recipeKeys = new ArrayList<>();
 
+    private final ConcurrentHashMap<Location, UUID> blockOwner = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, UUID> entityOwner = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, PlayerMU> playerMUList = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, BoardManager> activeBoardPackets = new ConcurrentHashMap<>();
@@ -56,6 +54,25 @@ public class Data {
     private final ConcurrentHashMap<UUID, UUID> lastReplier = new ConcurrentHashMap<>();
     private final LinkedHashMap<String, Kit> gameKits = new LinkedHashMap<>();
     private final LinkedHashMap<String, KillStreak> gameKillStreaks = new LinkedHashMap<>();
+    private final ConcurrentHashMap<UUID, Integer> teamMenuTask = new ConcurrentHashMap<>();
+
+    public void setBlockOwner(Location location, UUID uuid) {
+        blockOwner.put(location, uuid);
+    }
+    public UUID getBlockOwner(Location location) {
+        return blockOwner.get(location);
+    }
+    public void removeBlockOwner(Location location) {
+        blockOwner.remove(location);
+    }
+    public boolean hasBlockOwner(Location location) {
+        return blockOwner.containsKey(location);
+    }
+
+    public int getTeamMenuTask(UUID uuid) { return teamMenuTask.get(uuid); }
+    public void setTeamMenuTask(UUID uuid, int task) { teamMenuTask.put(uuid, task); }
+    public void removeTeamMenuTask(UUID uuid) { teamMenuTask.remove(uuid); }
+    public boolean hasTeamMenuTask(UUID uuid) { return teamMenuTask.containsKey(uuid); }
 
     public void setEntityOwner(UUID entity, UUID owner) {
         entityOwner.put(entity, owner);
@@ -276,6 +293,7 @@ public class Data {
             gameManager.scheduleWaitingTask();
             lastPlayerDamage.clear();
             entityOwner.clear();
+            blockOwner.clear();
         }
     }
 
