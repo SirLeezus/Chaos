@@ -36,53 +36,33 @@ public class DeathListener implements Listener {
                     data.setLastPlayerDamage(player.getUniqueId(), attacker.getUniqueId());
                 }
             }
-            if (e.getDamager() instanceof Player damager) {
-                UUID damUUID = damager.getUniqueId();
-                if (map.getTeam(damUUID).equals(map.getTeam(uuid))) e.setCancelled(true);
-            } else {
-                UUID damUUID = e.getDamager().getUniqueId();
-                if (data.hasEntityOwner(damUUID)) {
-                    UUID ownerUUID = data.getEntityOwner(damUUID);
-                    if (map.getTeam(ownerUUID).equals(map.getTeam(uuid))) e.setCancelled(true);
-                }
-            }
         } else if (e.getDamager() instanceof Player player) {
-            UUID uuid = player.getUniqueId();
-            Entity entity = e.getEntity();
-            UUID eUUID = entity.getUniqueId();
+            UUID eUUID = e.getEntity().getUniqueId();
             if (data.hasEntityOwner(eUUID)) {
                 UUID owner = data.getEntityOwner(eUUID);
-                if (map.getTeam(owner).equals(map.getTeam(uuid))) e.setCancelled(true);
+                if (map.getTeam(player.getUniqueId()).equals(map.getTeam(owner))) e.setCancelled(true);
             }
         } else if (e.getDamager() instanceof Projectile projectile) {
-            if (projectile.getShooter() instanceof Player shooter) {
-                UUID uuid = shooter.getUniqueId();
-                if (e.getEntity() instanceof Player player) {
-                    UUID pUUID = player.getUniqueId();
-                    if (map.getTeam(pUUID).equals(map.getTeam(uuid))) e.setCancelled(true);
-                } else {
-                    UUID eUUID = e.getEntity().getUniqueId();
-                    if (data.hasEntityOwner(eUUID)) {
-                        UUID ownerUUID = data.getEntityOwner(eUUID);
-                        if (map.getTeam(ownerUUID).equals(map.getTeam(uuid))) e.setCancelled(true);
-                    }
-                }
-            } else if (projectile.getShooter() instanceof Entity entity) {
-                UUID eUUID = entity.getUniqueId();
+            if (projectile.getShooter() instanceof Player player) {
+                UUID eUUID = e.getEntity().getUniqueId();
                 if (data.hasEntityOwner(eUUID)) {
-                    UUID ownerUUID = data.getEntityOwner(eUUID);
-                    if (map.getTeam(ownerUUID).equals(map.getTeam(e.getEntity().getUniqueId()))) e.setCancelled(true);
+                    UUID owner = data.getEntityOwner(eUUID);
+                    if (map.getTeam(player.getUniqueId()).equals(map.getTeam(owner))) e.setCancelled(true);
                 }
+            }
+        } else if (data.hasEntityOwner(e.getEntity().getUniqueId()) && data.hasEntityOwner(e.getDamager().getUniqueId())) {
+            if (map.getTeam(data.getEntityOwner(e.getEntity().getUniqueId())).equals(map.getTeam(data.getEntityOwner(e.getDamager().getUniqueId())))) {
+                e.setCancelled(true);
             }
         }
     }
 
     @EventHandler (priority = EventPriority.MONITOR)
     public void onDeath(EntityDamageEvent e) {
-        if (e.getEntity() instanceof Player player) {
-            if (!e.isCancelled()) {
-                Data data = Chaos.getPlugin().getData();
-                MapData map = data.getActiveMap().getData();
+        if (!e.isCancelled()) {
+            Data data = Chaos.getPlugin().getData();
+            MapData map = data.getActiveMap().getData();
+            if (e.getEntity() instanceof Player player) {
                 UUID uuid = player.getUniqueId();
                 if (!map.getSpectators().contains(uuid)) {
                     if (map.getTeam(data.getLastPlayerDamage(uuid)).equals(map.getTeam(uuid))) {
@@ -93,9 +73,11 @@ public class DeathListener implements Listener {
                     if (e.getDamage() >= player.getHealth() && !e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
                         if (!player.getInventory().contains(new ItemStack(Material.TOTEM_OF_UNDYING))) {
                             e.setCancelled(true);
-                            Player attacker = Bukkit.getPlayer(data.getLastPlayerDamage(uuid));
-                            respawnPlayer(player, attacker);
-                            data.removeLastPlayerDamage(uuid);
+                            if (!map.isRespawningPlayer(uuid)) {
+                                map.addRespawningPlayer(uuid);
+                                respawnPlayer(player, Bukkit.getPlayer(data.getLastPlayerDamage(uuid)));
+                                data.removeLastPlayerDamage(uuid);
+                            }
                         }
                     } else if (e.getDamage() >= player.getHealth() && e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
                         e.setCancelled(true);
