@@ -50,7 +50,7 @@ public class Demolitionist extends Kit {
         unlocked.setItemMeta(unlockedMeta);
         unlockedPreview = unlocked;
 
-        ItemStack selected = BukkitUtils.getItem(Material.IRON_AXE,
+        ItemStack selected = BukkitUtils.getItem(Material.TNT,
                 Lang.MENU_KIT_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
                 Lang.MENU_KIT_LORE_SELECTED.getString(null),
                 null,

@@ -34,7 +34,7 @@ public class Juiced extends KillStreak {
         locked.setItemMeta(lockedMeta);
         lockedPreview = locked;
 
-        ItemStack unlocked = BukkitUtils.getItem(Material.GREEN_DYE,
+        ItemStack unlocked = BukkitUtils.getItem(Material.GOLDEN_APPLE,
                 Lang.MENU_KILL_STREAK_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
                 Lang.MENU_KILL_STREAK_LORE_UNLOCKED.getString(new String[] { description(), String.valueOf(requiredKillStreak()) }),
                 null,
@@ -44,7 +44,7 @@ public class Juiced extends KillStreak {
         unlocked.setItemMeta(unlockedMeta);
         unlockedPreview = unlocked;
 
-        ItemStack selected = BukkitUtils.getItem(Material.GREEN_DYE,
+        ItemStack selected = BukkitUtils.getItem(Material.GOLDEN_APPLE,
                 Lang.MENU_KILL_STREAK_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
                 Lang.MENU_KILL_STREAK_LORE_SELECTED.getString(new String[] { description(), String.valueOf(requiredKillStreak()) }),
                 null,

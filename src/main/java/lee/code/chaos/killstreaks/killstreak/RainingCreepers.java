@@ -73,7 +73,7 @@ public class RainingCreepers extends KillStreak {
 
     @Override
     public long cost() {
-        return 10000;
+        return 5000;
     }
 
     @Override

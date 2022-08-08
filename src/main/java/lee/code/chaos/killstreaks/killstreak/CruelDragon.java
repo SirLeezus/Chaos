@@ -74,7 +74,7 @@ public class CruelDragon extends KillStreak {
 
     @Override
     public long cost() {
-        return 5000;
+        return 4000;
     }
 
     @Override

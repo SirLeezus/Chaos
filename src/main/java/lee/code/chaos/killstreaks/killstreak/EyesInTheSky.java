@@ -65,7 +65,7 @@ public class EyesInTheSky extends KillStreak {
 
     @Override
     public long cost() {
-        return 500;
+        return 2000;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class EyesInTheSky extends KillStreak {
 
     @Override
     public int requiredKillStreak() {
-        return 5;
+        return 10;
     }
 
     @Override

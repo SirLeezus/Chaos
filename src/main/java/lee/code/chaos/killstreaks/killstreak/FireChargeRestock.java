@@ -12,13 +12,13 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class TrustySteed extends KillStreak {
+public class FireChargeRestock extends KillStreak {
 
     private final ItemStack lockedPreview;
     private final ItemStack unlockedPreview;
     private final ItemStack selectedPreview;
 
-    public TrustySteed() {
+    public FireChargeRestock() {
         PU pu = Chaos.getPlugin().getPU();
         ItemStack locked = BukkitUtils.getItem(Material.STRUCTURE_VOID,
                 Lang.MENU_KILL_STREAK_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
@@ -30,7 +30,7 @@ public class TrustySteed extends KillStreak {
         locked.setItemMeta(lockedMeta);
         lockedPreview = locked;
 
-        ItemStack unlocked = BukkitUtils.getItem(Material.HORSE_SPAWN_EGG,
+        ItemStack unlocked = BukkitUtils.getItem(Material.FIRE_CHARGE,
                 Lang.MENU_KILL_STREAK_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
                 Lang.MENU_KILL_STREAK_LORE_UNLOCKED.getString(new String[] { description(), String.valueOf(requiredKillStreak()) }),
                 null,
@@ -40,7 +40,7 @@ public class TrustySteed extends KillStreak {
         unlocked.setItemMeta(unlockedMeta);
         unlockedPreview = unlocked;
 
-        ItemStack selected = BukkitUtils.getItem(Material.HORSE_SPAWN_EGG,
+        ItemStack selected = BukkitUtils.getItem(Material.FIRE_CHARGE,
                 Lang.MENU_KILL_STREAK_NAME.getString(new String[] { BukkitUtils.parseCapitalization(name()) }),
                 Lang.MENU_KILL_STREAK_LORE_SELECTED.getString(new String[] { description(), String.valueOf(requiredKillStreak()) }),
                 null,
@@ -55,17 +55,17 @@ public class TrustySteed extends KillStreak {
 
     @Override
     public String name() {
-        return "trusty_steed";
+        return "fire_charge_restock";
     }
 
     @Override
     public String description() {
-        return "&7You'll be given one horse egg. When\n&7spawned it'll have a saddle, golden \n&7armor and be ready to ride.";
+        return "&7You'll be given 10 fire charges.";
     }
 
     @Override
     public long cost() {
-        return 2000;
+        return 1000;
     }
 
     @Override
@@ -85,12 +85,12 @@ public class TrustySteed extends KillStreak {
 
     @Override
     public int requiredKillStreak() {
-        return 10;
+        return 5;
     }
 
     @Override
     public void runLogic(Player player) {
-        BukkitUtils.givePlayerItem(player, new ItemStack(Material.HORSE_SPAWN_EGG), 1);
+        BukkitUtils.givePlayerItem(player, new ItemStack(Material.FIRE_CHARGE), 10);
         player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.KILL_STREAK_ACTIVATED_PLAYER.getComponent(new String[] { BukkitUtils.parseCapitalization(name()) })).hoverEvent(Lang.KILL_STREAK_ACTIVATED_HOVER.getComponent(new String[] { description() })));
     }
 }

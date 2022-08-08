@@ -76,7 +76,7 @@ public class FlashStorm extends KillStreak {
 
     @Override
     public long cost() {
-        return 2000;
+        return 3000;
     }
 
     @Override

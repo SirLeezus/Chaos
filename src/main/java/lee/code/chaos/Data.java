@@ -224,38 +224,39 @@ public class Data {
         gameKits.put(deepDive.name(), deepDive);
         Kit engineer = new Engineer();
         gameKits.put(engineer.name(), engineer);
+        Kit hadouken = new Hadouken();
+        gameKits.put(hadouken.name(), hadouken);
+        Kit tripleShot = new TripleShot();
+        gameKits.put(tripleShot.name(), tripleShot);
         Kit bullseye = new Bullseye();
         gameKits.put(bullseye.name(), bullseye);
         Kit enchanter = new Enchanter();
         gameKits.put(enchanter.name(), enchanter);
         Kit demolitionist = new Demolitionist();
         gameKits.put(demolitionist.name(), demolitionist);
-        Kit hadouken = new Hadouken();
-        gameKits.put(hadouken.name(), hadouken);
-        Kit tripleShot = new TripleShot();
-        gameKits.put(tripleShot.name(), tripleShot);
-
         //kill streaks
-        KillStreak eyesInTheSky = new EyesInTheSky();
-        gameKillStreaks.put(eyesInTheSky.name(), eyesInTheSky);
-        KillStreak dragonRider = new CruelDragon();
-        gameKillStreaks.put(dragonRider.name(), dragonRider);
-        KillStreak rainingCreepers = new RainingCreepers();
-        gameKillStreaks.put(rainingCreepers.name(), rainingCreepers);
+        KillStreak secondChance = new SecondChance();
+        gameKillStreaks.put(secondChance.name(), secondChance);
         KillStreak homeRun = new HomeRun();
         gameKillStreaks.put(homeRun.name(), homeRun);
         KillStreak juiced = new Juiced();
         gameKillStreaks.put(juiced.name(), juiced);
-        KillStreak nuke = new Nuke();
-        gameKillStreaks.put(nuke.name(), nuke);
+        KillStreak fireChargeRestock = new FireChargeRestock();
+        gameKillStreaks.put(fireChargeRestock.name(), fireChargeRestock);
         KillStreak explosiveRestock = new ExplosiveRestock();
         gameKillStreaks.put(explosiveRestock.name(), explosiveRestock);
+        KillStreak eyesInTheSky = new EyesInTheSky();
+        gameKillStreaks.put(eyesInTheSky.name(), eyesInTheSky);
         KillStreak trustySteed = new TrustySteed();
         gameKillStreaks.put(trustySteed.name(), trustySteed);
-        KillStreak secondChance = new SecondChance();
-        gameKillStreaks.put(secondChance.name(), secondChance);
         KillStreak flashStorm = new FlashStorm();
         gameKillStreaks.put(flashStorm.name(), flashStorm);
+        KillStreak cruelDragon = new CruelDragon();
+        gameKillStreaks.put(cruelDragon.name(), cruelDragon);
+        KillStreak rainingCreepers = new RainingCreepers();
+        gameKillStreaks.put(rainingCreepers.name(), rainingCreepers);
+        KillStreak nuke = new Nuke();
+        gameKillStreaks.put(nuke.name(), nuke);
     }
 
     public int getNextMap() {
