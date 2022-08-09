@@ -2,7 +2,7 @@ name: Chaos
 version: '${project.version}'
 main: lee.code.chaos.Chaos
 api-version: 1.19
-depend: [GoldmanCore, ProtocolLib]
+depend: [GoldmanCore, PermissionManager, ProtocolLib]
 commands:
   message:
     description: Message a online player.
@@ -38,11 +38,7 @@ commands:
     description: Removes a booster from queue.
     permission: chaos.command.removebooster
     usage: "/removebooster &f<id>"
-  setrank:
-    description: Sets a target player's rank.
+  setpremiumrank:
+    description: Sets a target player's premium rank.
     permission: chaos.command.setrank
-    usage: "/setrank &f<player> <rank>"
-  removerank:
-    description: Removes a target player's rank.
-    permission: chaos.command.removerank
-    usage: "/removerank &f<player>"
+    usage: "/setpremiumrank &f<player> <rank>"

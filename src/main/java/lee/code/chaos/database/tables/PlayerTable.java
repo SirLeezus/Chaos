@@ -38,12 +38,6 @@ public class PlayerTable {
     @DatabaseField(columnName = "games", canBeNull = false)
     private int games;
 
-    @DatabaseField(columnName = "perms", canBeNull = false)
-    private String perms;
-
-    @DatabaseField(columnName = "rank", canBeNull = false)
-    private String rank;
-
     @DatabaseField(columnName = "kit", canBeNull = false)
     private String kit;
 
@@ -59,8 +53,6 @@ public class PlayerTable {
         this.longestKillStreak = 0;
         this.woolBroken = 0;
         this.games = 0;
-        this.perms = "0";
-        this.rank = "0";
         this.kit = "default";
         this.selectedKillStreaks = "0";
     }

@@ -7,6 +7,7 @@ import lee.code.chaos.lists.Lang;
 import lee.code.chaos.menusystem.Menu;
 import lee.code.chaos.menusystem.PlayerMU;
 import lee.code.core.util.bukkit.BukkitUtils;
+import lee.code.permissions.PermissionsAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -56,8 +57,7 @@ public class KitBuyPreview extends Menu {
             if (balance >= kit.cost()) {
                 cacheManager.setCoins(uuid, balance - kit.cost());
                 cacheManager.setKit(uuid, kit.name());
-                cacheManager.addPerm(uuid, "chaos.kit." + kit.name());
-                plugin.getPermissionManager().register(player);
+                PermissionsAPI.addPerm(player, "chaos.kit." + kit.name());
                 player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_BUY_KIT.getComponent(new String[] { BukkitUtils.parseCapitalization(kit.name()) })));
                 inventory.close();
             } else {

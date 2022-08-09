@@ -100,6 +100,13 @@
             <version>1.0.0</version>
             <scope>provided</scope>
         </dependency>
+        <!-- PermissionsAPI API -->
+        <dependency>
+            <groupId>lee.code.permissions</groupId>
+            <artifactId>permissions-api</artifactId>
+            <version>1.0.0</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- ProtocolLib API -->
         <dependency>
             <groupId>com.comphenix.protocol</groupId>

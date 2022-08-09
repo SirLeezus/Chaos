@@ -45,6 +45,7 @@ public class Data {
 
     @Getter private final List<NamespacedKey> recipeKeys = new ArrayList<>();
     @Getter private final List<String> rankKeys = new ArrayList<>();
+    @Getter private final List<String> premiumRankKeys = new ArrayList<>();
 
     private final ConcurrentHashMap<Location, UUID> blockOwner = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, UUID> entityOwner = new ConcurrentHashMap<>();
@@ -196,6 +197,7 @@ public class Data {
 
         //rank keys
         rankKeys.addAll(EnumSet.allOf(Rank.class).stream().map(Rank::name).toList());
+        for (Rank rank : Rank.values()) if (rank.getPriority() > 0) premiumRankKeys.add(rank.name());
 
         //remove recipes
         List<Material> removedRecipes = new ArrayList<>(EnumSet.allOf(Tool.class).stream().map(Tool::getMaterial).toList());
@@ -216,7 +218,8 @@ public class Data {
             CraftingRecipe.valueOf(sRecipe).registerRecipe();
         }
 
-        it.forEachRemaining(dRecipe -> {
+        Iterator<Recipe> ita = Bukkit.getServer().recipeIterator();
+        ita.forEachRemaining(dRecipe -> {
             if (dRecipe instanceof ShapelessRecipe shapelessRecipe) recipeKeys.add(shapelessRecipe.getKey());
             else if (dRecipe instanceof ShapedRecipe shapedRecipe) recipeKeys.add(shapedRecipe.getKey());
             else if (dRecipe instanceof BlastingRecipe shapedRecipe) recipeKeys.add(shapedRecipe.getKey());

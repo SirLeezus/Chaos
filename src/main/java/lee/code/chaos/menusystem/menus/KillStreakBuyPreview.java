@@ -7,6 +7,7 @@ import lee.code.chaos.lists.Lang;
 import lee.code.chaos.menusystem.Menu;
 import lee.code.chaos.menusystem.PlayerMU;
 import lee.code.core.util.bukkit.BukkitUtils;
+import lee.code.permissions.PermissionsAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -56,8 +57,7 @@ public class KillStreakBuyPreview extends Menu {
             if (balance >= killStreak.cost()) {
                 cacheManager.setCoins(uuid, balance - killStreak.cost());
                 cacheManager.addSelectedKillStreak(uuid, killStreak.name());
-                cacheManager.addPerm(uuid, "chaos.streak." + killStreak.name());
-                plugin.getPermissionManager().register(player);
+                PermissionsAPI.addPerm(player, "chaos.streak." + killStreak.name());
                 player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.MENU_KILL_STREAK.getComponent(new String[] { BukkitUtils.parseCapitalization(killStreak.name()) })));
                 inventory.close();
             } else {

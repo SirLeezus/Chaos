@@ -8,6 +8,7 @@ import lee.code.chaos.lists.GameTeam;
 import lee.code.chaos.managers.GameManager;
 import lee.code.chaos.managers.board.BoardManager;
 import lee.code.chaos.maps.MapData;
+import lee.code.permissions.PermissionsAPI;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -46,9 +47,6 @@ public class JoinListener implements Listener {
 
         //disable join message
         e.joinMessage(null);
-
-        //register perms
-        plugin.getPermissionManager().register(player);
 
         //give all recipes
         for (NamespacedKey key : data.getRecipeKeys()) e.getPlayer().discoverRecipe(key);

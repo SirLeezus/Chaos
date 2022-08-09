@@ -63,7 +63,6 @@ public class DatabaseManager {
         boosterDao = DaoManager.createDao(connectionSource, BoosterTable.class);
         //booster punishment data into cache
         for (BoosterTable boosterTable : boosterDao.queryForAll()) cacheManager.setBoosterData(boosterTable);
-
     }
 
     public void closeConnection() {

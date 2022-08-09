@@ -10,6 +10,7 @@ import lee.code.chaos.managers.board.BoardManager;
 import lee.code.chaos.maps.MapData;
 import lee.code.chaos.util.CountdownTimer;
 import lee.code.core.util.bukkit.BukkitUtils;
+import lee.code.permissions.PermissionsAPI;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
@@ -377,7 +378,6 @@ public class GameManager {
         UUID uuid = player.getUniqueId();
         Chaos plugin = Chaos.getPlugin();
         Data data = plugin.getData();
-        CacheManager cacheManager = plugin.getCacheManager();
         BoardManager boardManager = data.hasBoard(uuid) ? data.getBoardPacket(uuid) : new BoardManager(uuid);
         String level = plugin.getCacheManager().getDisplayLevel(uuid);
         switch (team) {
@@ -385,7 +385,7 @@ public class GameManager {
                 boardManager.setTeamName("R" + data.getTeamNumber());
                 boardManager.setColor(ChatColor.RED);
                 String prefix = "&6[&a" + level + "&6] &c";
-                if (cacheManager.hasRank(uuid)) prefix = prefix + Rank.valueOf(cacheManager.getRank(uuid)).getPrefix() + " &c";
+                if (PermissionsAPI.hasRank(uuid)) prefix = prefix + Rank.valueOf(PermissionsAPI.getRank(uuid)).getPrefix() + " &c";
                 player.displayName(BukkitUtils.parseColorComponent( prefix + player.getName()));
                 player.playerListName(BukkitUtils.parseColorComponent( prefix + player.getName()));
             }
@@ -393,7 +393,7 @@ public class GameManager {
                 boardManager.setTeamName("B" + data.getTeamNumber());
                 boardManager.setColor(ChatColor.BLUE);
                 String prefix = "&6[&a" + level + "&6] &9";
-                if (cacheManager.hasRank(uuid)) prefix = prefix + Rank.valueOf(cacheManager.getRank(uuid)).getPrefix() + " &9";
+                if (PermissionsAPI.hasRank(uuid)) prefix = prefix + Rank.valueOf(PermissionsAPI.getRank(uuid)).getPrefix() + " &9";
                 player.displayName(BukkitUtils.parseColorComponent( prefix + player.getName()));
                 player.playerListName(BukkitUtils.parseColorComponent( prefix + player.getName()));
             }
@@ -401,7 +401,7 @@ public class GameManager {
                 boardManager.setTeamName("S" + data.getTeamNumber());
                 boardManager.setColor(ChatColor.YELLOW);
                 String prefix = "&6[&a" + level + "&6] &e";
-                if (cacheManager.hasRank(uuid)) prefix = prefix + Rank.valueOf(cacheManager.getRank(uuid)).getPrefix() + " &e";
+                if (PermissionsAPI.hasRank(uuid)) prefix = prefix + Rank.valueOf(PermissionsAPI.getRank(uuid)).getPrefix() + " &e";
                 player.displayName(BukkitUtils.parseColorComponent(prefix + player.getName()));
                 player.playerListName(BukkitUtils.parseColorComponent( prefix + player.getName()));
             }
@@ -409,7 +409,7 @@ public class GameManager {
         boardManager.setCollisionRule(CollisionRule.NEVER);
         data.setTeamNumber(data.getTeamNumber() + 1);
         String prefix = "&6[&a" + level + "&6] ";
-        if (cacheManager.hasRank(uuid)) prefix = prefix + Rank.valueOf(cacheManager.getRank(uuid)).getPrefix() + " ";
+        if (PermissionsAPI.hasRank(uuid)) prefix = prefix + Rank.valueOf(PermissionsAPI.getRank(uuid)).getPrefix() + " ";
         boardManager.setPrefix(WrappedChatComponent.fromJson(BukkitUtils.serializeColorComponentJson(prefix)));
         boardManager.setPlayers(Collections.singletonList(player.getName()));
         data.setBoardPacket(uuid, boardManager);
