@@ -8,7 +8,7 @@ import org.bukkit.ChatColor;
 
 @AllArgsConstructor
 public enum Lang {
-    SIDEBAR_TITLE("&#f54302&lChaos Score"),
+    SIDEBAR_TITLE("&#FFAA00&lChaos Score"),
     MESSAGE_SENT("&9[&eYou &9-> &e{0}&9] "),
     MESSAGE_RECEIVED("&9[&e{0} &9-> &eYou&9] "),
     PREFIX("&6[&e!&6] &r"),
@@ -27,6 +27,7 @@ public enum Lang {
     RED_COLOR("&c"),
     BLUE_TEAM("&9&lBlue"),
     RED_TEAM("&c&lRed"),
+    SPECTATOR_TEAM("&e&lSpec"),
     MENU_KIT_SELECTED("&aYou successfully selected the kit &5&l{0}&a!"),
     MENU_KILL_STREAK_SELECTED("&aYou successfully selected the kill streak &d&l{0}&a!"),
     MENU_KILL_STREAK_UNSELECTED("&aYou successfully unselected the kill streak &d&l{0}&a!"),
@@ -59,8 +60,8 @@ public enum Lang {
     CYCLING_MAP("&eCycling map in &6{0}s&e!"),
     CYCLING_MAP_STARTED("&eCycling map process has started!"),
     BROKE_WOOL("&aThe player {0}{1} &abroke a {2} Wool &ablock! {3}({4}/{5})"),
-    TABLIST_HEADER("&#228B22▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n&#f54302&lJourney Chaos\n&#228B22▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"),
-    TABLIST_FOOTER("\n&#228B22&lOnline&7: &#4dc462{0}"),
+    TABLIST_HEADER("&#228B22▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬\n&#FFAA00&lJourney Chaos\n&#228B22▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"),
+    TABLIST_FOOTER("\n" + RED_TEAM.getString(null) + "&7: &c{0} " + BLUE_TEAM.getString(null) + "&7: &9{1} " + SPECTATOR_TEAM.getString(null) + "&7: &e{2}\n"),
     PLAYER_KILLED_TARGET("&eThe player {0}{1} &ekilled {2}{3}&e."),
     PLAYER_DIED("&eThe player {0}{1} &edied."),
     ERROR_BUY_KIT_BALANCE("&cYou only have &#f5a802{0} ⛃ &cand you need &#f5a802{1} ⛃ &cto buy the kit &5&l{2}&c."),

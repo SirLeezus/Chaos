@@ -353,7 +353,8 @@ public class Data {
     private void scheduleTabListUpdater() {
         Bukkit.getScheduler().scheduleSyncRepeatingTask(Chaos.getPlugin(), () -> {
             if (!Bukkit.getOnlinePlayers().isEmpty()) {
-                getServer().sendPlayerListHeaderAndFooter(Lang.TABLIST_HEADER.getComponent(null), Lang.TABLIST_FOOTER.getComponent(new String[] { String.valueOf(BukkitUtils.getOnlinePlayers().size()) }));
+                MapData map = Chaos.getPlugin().getData().getActiveMap().getData();
+                getServer().sendPlayerListHeaderAndFooter(Lang.TABLIST_HEADER.getComponent(null), Lang.TABLIST_FOOTER.getComponent(new String[] { String.valueOf(map.getRedTeam().size()), String.valueOf(map.getBlueTeam().size()), String.valueOf(map.getSpectators().size()) }));
             }
         }, 10, 40);
     }
