@@ -9,8 +9,8 @@ import org.bukkit.ChatColor;
 @AllArgsConstructor
 public enum Lang {
     SIDEBAR_TITLE("&#FFAA00&lChaos Score"),
-    MESSAGE_SENT("&9[&eYou &9-> &e{0}&9] "),
-    MESSAGE_RECEIVED("&9[&e{0} &9-> &eYou&9] "),
+    MESSAGE_SENT("&6[{0}You &6-> &e{1}{2}&6] "),
+    MESSAGE_RECEIVED("&6[&e{0}{1} &6-> {2}You&6] "),
     PREFIX("&6[&e!&6] &r"),
     USAGE("&6&lUsage: &e{0}"),
     DEATH_PREFIX("&cDeath &6➔ &r"),
@@ -28,6 +28,7 @@ public enum Lang {
     BLUE_TEAM("&9&lBlue"),
     RED_TEAM("&c&lRed"),
     SPECTATOR_TEAM("&e&lSpec"),
+    TEAM_MESSAGE("&6[{0} Chat&6] {1}{2}&7: {3}{4}"),
     MENU_KIT_SELECTED("&aYou successfully selected the kit &5&l{0}&a!"),
     MENU_KILL_STREAK_SELECTED("&aYou successfully selected the kill streak &d&l{0}&a!"),
     MENU_KILL_STREAK_UNSELECTED("&aYou successfully unselected the kill streak &d&l{0}&a!"),
@@ -98,6 +99,7 @@ public enum Lang {
     COMMAND_BOOSTER_QUEUE("&3{0}&b. &#f5a802Coins x{1} Booster &b| &6{2}"),
     COMMAND_BOOSTER_SPLITTER("&a-------------------------------------------------"),
     COMMAND_BOOSTER_REMOVE_SUCCESSFUL("&aThe booster id &9{0} &awas successfully removed."),
+    COMMAND_COINS_SUCCESSFUL("&aThe player &6{0} &ahas &#f5a802{1} ⛃&a!"),
     ;
 
     @Getter private final String string;

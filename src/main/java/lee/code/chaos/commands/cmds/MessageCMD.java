@@ -3,6 +3,7 @@ package lee.code.chaos.commands.cmds;
 import lee.code.chaos.Chaos;
 import lee.code.chaos.Data;
 import lee.code.chaos.lists.Lang;
+import lee.code.chaos.maps.MapData;
 import lee.code.core.util.bukkit.BukkitUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -31,17 +32,21 @@ public class MessageCMD implements CommandExecutor {
                     Player target = Bukkit.getPlayer(args[0]);
                     if (target != null && target != player) {
 
+                        MapData map = data.getActiveMap().getData();
                         UUID targetUUID = target.getUniqueId();
+                        String targetColor = map.getColorChar(targetUUID);
+                        String playerColor = map.getColorChar(uuid);
+
                         Component message = Component.text(BukkitUtils.buildStringFromArgs(args, 1));
                         data.setLastReplier(targetUUID, uuid);
                         data.setLastReplier(uuid, targetUUID);
 
-                        player.sendMessage(Lang.MESSAGE_SENT.getComponent(new String[] { target.getName() })
-                                .append(message.color(TextColor.color(0, 220, 234))));
+                        player.sendMessage(Lang.MESSAGE_SENT.getComponent(new String[] { playerColor, targetColor, target.getName() })
+                                .append(message.color(TextColor.color(135, 0, 255))));
 
-                        target.sendMessage(Lang.MESSAGE_RECEIVED.getComponent(new String[] { player.getName() })
+                        target.sendMessage(Lang.MESSAGE_RECEIVED.getComponent(new String[] { playerColor, player.getName(), targetColor })
                                 .clickEvent(ClickEvent.clickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tell " + player.getName() + " "))
-                                .append(message.color(TextColor.color(0, 220, 234))));
+                                .append(message.color(TextColor.color(135, 0, 255))));
 
                     } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_COMMAND_MESSAGE_TO_SELF.getComponent(null)));
                 } else player.sendMessage(Lang.PREFIX.getComponent(null).append(Lang.ERROR_PLAYER_NOT_ONLINE.getComponent(new String[] { args[0] })));

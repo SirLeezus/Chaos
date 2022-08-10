@@ -79,6 +79,10 @@ public class Chaos extends JavaPlugin {
         getCommand("removebooster").setTabCompleter(new RemoveBoosterTab());
         getCommand("setpremiumrank").setExecutor(new SetPremiumRankCMD());
         getCommand("setpremiumrank").setTabCompleter(new SetPremiumRankTab());
+        getCommand("coins").setExecutor(new CoinsCMD());
+        getCommand("coins").setTabCompleter(new CoinsTab());
+        getCommand("teamchat").setExecutor(new TeamChatCMD());
+        getCommand("teamchat").setTabCompleter(new TeamChatTab());
     }
 
     public static Chaos getPlugin() {

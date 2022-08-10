@@ -42,3 +42,11 @@ commands:
     description: Sets a target player's premium rank.
     permission: chaos.command.setrank
     usage: "/setpremiumrank &f<player> <rank>"
+  coins:
+    description: Check a player's coin balance.
+    permission: chaos.command.coins
+    usage: "/coins &f<player>"
+  teamchat:
+    description: Sends a message to your team.
+    permission: chaos.command.teamchat
+    usage: "/teamchat &f<message>"

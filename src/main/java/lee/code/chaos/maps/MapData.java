@@ -1,6 +1,7 @@
 package lee.code.chaos.maps;
 
 import lee.code.chaos.lists.GameTeam;
+import lee.code.chaos.lists.Lang;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Location;
@@ -44,5 +45,12 @@ public class MapData {
         else if (blueTeam.contains(uuid)) return GameTeam.BLUE;
         else if (redTeam.contains(uuid)) return GameTeam.RED;
         else return GameTeam.SPECTATOR;
+    }
+
+    public String getColorChar(UUID uuid) {
+        if (spectators.contains(uuid)) return Lang.SPECTATOR_COLOR.getString(null);
+        else if (blueTeam.contains(uuid)) return Lang.BLUE_COLOR.getString(null);
+        else if (redTeam.contains(uuid)) return Lang.RED_COLOR.getString(null);
+        else return Lang.SPECTATOR_COLOR.getString(null);
     }
 }
