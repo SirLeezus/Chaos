@@ -9,6 +9,7 @@ import lee.code.chaos.managers.GameManager;
 import lee.code.chaos.managers.board.BoardManager;
 import lee.code.chaos.maps.MapData;
 import lee.code.permissions.PermissionsAPI;
+import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -50,6 +51,9 @@ public class JoinListener implements Listener {
 
         //give all recipes
         for (NamespacedKey key : data.getRecipeKeys()) e.getPlayer().discoverRecipe(key);
+
+        //motd
+        for (Component line : data.getMotd()) player.sendMessage(line);
 
         //update displayname
         gameManager.updateDisplayName(player, GameTeam.SPECTATOR, true);

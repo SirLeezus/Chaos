@@ -16,7 +16,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -66,11 +65,8 @@ public class GameListener implements Listener {
                         String.valueOf(Setting.WIN_SCORE.getValue() - map.getRedScore()),
                         String.valueOf(Setting.WIN_SCORE.getValue()),
                 })));
-
                 if (map.getRedScore() >= Setting.WIN_SCORE.getValue()) {
-                    if (data.getGameState().equals(GameState.ACTIVE)) {
-                        gameManager.endGame();
-                    }
+                    gameManager.endGame();
                 }
             } else if (e.getBlock().getType().equals(Material.RED_WOOL)) {
                 e.setCancelled(true);
@@ -86,9 +82,7 @@ public class GameListener implements Listener {
                         String.valueOf(Setting.WIN_SCORE.getValue()),
                 })));
                 if (map.getBlueScore() >= Setting.WIN_SCORE.getValue()) {
-                    if (data.getGameState().equals(GameState.ACTIVE)) {
-                        gameManager.endGame();
-                    }
+                    gameManager.endGame();
                 }
             } else e.setCancelled(Chaos.getPlugin().getPU().isSafeLocation(e.getBlock().getLocation()));
         } else e.setCancelled(true);

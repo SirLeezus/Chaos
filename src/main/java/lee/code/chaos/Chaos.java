@@ -5,8 +5,10 @@ import lee.code.chaos.commands.tabs.*;
 import lee.code.chaos.database.CacheManager;
 import lee.code.chaos.database.DatabaseManager;
 import lee.code.chaos.listeners.*;
+import lee.code.chaos.lists.Lang;
 import lee.code.chaos.managers.GameManager;
 import lee.code.chaos.managers.WorldManager;
+import lee.code.core.util.bukkit.BukkitUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -42,7 +44,7 @@ public class Chaos extends JavaPlugin {
     @Override
     public void onDisable() {
         databaseManager.closeConnection();
-        for (Player player : Bukkit.getOnlinePlayers()) player.kick();
+        BukkitUtils.kickOnlinePlayers(Lang.RESTART_MESSAGE.getComponent(null));
         Bukkit.unloadWorld(data.getActiveMap().name(), false);
         worldManager.deleteWorldFolder(new File("./" + data.getActiveMap().name()));
     }

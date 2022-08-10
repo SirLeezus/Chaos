@@ -97,9 +97,16 @@ public class DeathListener implements Listener {
         Data data = plugin.getData();
         CacheManager cacheManager = plugin.getCacheManager();
         UUID uuid = attacker.getUniqueId();
+
+        MapData map = data.getActiveMap().getData();
+        ScoreData scoreData = data.getPlayerScoreData(uuid);
+        int killStreak = scoreData.getKillStreak();
+
+        if (killStreak % 5 == 0) {
+            Bukkit.getServer().sendMessage(Lang.PREFIX.getComponent(null).append(Lang.KILL_STREAK_MESSAGE.getComponent(new String[] { map.getColorChar(uuid), attacker.getName(), String.valueOf(killStreak) })));
+        }
+
         if (cacheManager.hasSelectedKillStreak(uuid)) {
-            ScoreData scoreData = data.getPlayerScoreData(uuid);
-            int killStreak = scoreData.getKillStreak();
             LinkedList<KillStreak> killStreaks = cacheManager.getSelectedKillStreaks(uuid);
             for (int i = 0; i < killStreaks.size(); i++) {
                 KillStreak streak = killStreaks.get(i);

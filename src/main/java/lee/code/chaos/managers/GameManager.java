@@ -93,22 +93,30 @@ public class GameManager {
         }
 
         List<UUID> winners = new ArrayList<>();
-        //winner
+        List<Component> lines = new ArrayList<>();
+
+        lines.add(Lang.GAME_WINNER_SLITTER.getComponent(null));
+        lines.add(Component.text(""));
+
         if (map.getBlueScore() > map.getRedScore() && !map.getBlueTeam().isEmpty()) {
             winners.addAll(map.getBlueTeam());
-            Bukkit.getServer().sendMessage(Lang.PREFIX.getComponent(null).append(Lang.GAME_WINNER.getComponent(new String[] { Lang.BLUE_TEAM.getString(null) })));
+            lines.add(Lang.GAME_WINNER.getComponent(new String[] { Lang.BLUE_TEAM.getString(null) }));
         } else if (map.getRedScore() > map.getBlueScore() && !map.getRedTeam().isEmpty()) {
             winners.addAll(map.getRedTeam());
-            Bukkit.getServer().sendMessage(Lang.PREFIX.getComponent(null).append(Lang.GAME_WINNER.getComponent(new String[] { Lang.RED_TEAM.getString(null) })));
+            lines.add(Lang.GAME_WINNER.getComponent(new String[] { Lang.RED_TEAM.getString(null) }));
         } else if (!map.getBlueTeam().isEmpty()) {
             winners.addAll(map.getBlueTeam());
-            Bukkit.getServer().sendMessage(Lang.PREFIX.getComponent(null).append(Lang.GAME_WINNER.getComponent(new String[] { Lang.BLUE_TEAM.getString(null) })));
+            lines.add(Lang.GAME_WINNER.getComponent(new String[] { Lang.BLUE_TEAM.getString(null) }));
         } else if (!map.getRedTeam().isEmpty()) {
             winners.addAll(map.getRedTeam());
-            Bukkit.getServer().sendMessage(Lang.PREFIX.getComponent(null).append(Lang.GAME_WINNER.getComponent(new String[] { Lang.RED_TEAM.getString(null) })));
+            lines.add(Lang.GAME_WINNER.getComponent(new String[] { Lang.RED_TEAM.getString(null) }));
         } else {
-            Bukkit.getServer().sendMessage(Lang.PREFIX.getComponent(null).append(Lang.GAME_END_DRAW.getComponent(null)));
+            lines.add(Lang.GAME_END_DRAW.getComponent(null));
         }
+        lines.add(Component.text(""));
+        lines.add(Lang.GAME_WINNER_SLITTER.getComponent(null));
+
+        for (Component line : lines) Bukkit.getServer().sendMessage(line);
 
         CountdownTimer timer = new CountdownTimer(plugin,
                 20,

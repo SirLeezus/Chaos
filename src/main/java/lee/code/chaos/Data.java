@@ -24,6 +24,8 @@ import lee.code.chaos.recipes.CraftingRecipe;
 import lee.code.core.util.bukkit.BukkitUtils;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
@@ -46,6 +48,7 @@ public class Data {
     @Getter private final List<NamespacedKey> recipeKeys = new ArrayList<>();
     @Getter private final List<String> rankKeys = new ArrayList<>();
     @Getter private final List<String> premiumRankKeys = new ArrayList<>();
+    @Getter private final List<Component> motd = new ArrayList<>();
 
     private final ConcurrentHashMap<Location, UUID> blockOwner = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, UUID> entityOwner = new ConcurrentHashMap<>();
@@ -117,6 +120,7 @@ public class Data {
         playerScore.put(uuid, new ScoreData(uuid));
         return playerScore.get(uuid);
     }
+
     public void addPlayerKill(UUID uuid) {
         CacheManager cacheManager = Chaos.getPlugin().getCacheManager();
         long coins = cacheManager.getCoins(uuid) + 5;
@@ -198,6 +202,16 @@ public class Data {
         //rank keys
         rankKeys.addAll(EnumSet.allOf(Rank.class).stream().map(Rank::name).toList());
         for (Rank rank : Rank.values()) if (rank.getPriority() > 0) premiumRankKeys.add(rank.name());
+
+        //motd
+        motd.add(Lang.MOTD_SPLITTER.getComponent(null));
+        motd.add(Component.text(""));
+        motd.add(Lang.MOTD_TITLE.getComponent(null));
+        motd.add(Component.text(""));
+        motd.add(Lang.DISCORD.getComponent(null).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, Lang.DISCORD_LINK.getString(null))));
+        motd.add(Lang.STORE.getComponent(null).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, Lang.STORE_LINK.getString(null))));
+        motd.add(Component.text(""));
+        motd.add(Lang.MOTD_SPLITTER.getComponent(null));
 
         //remove recipes
         List<Material> removedRecipes = new ArrayList<>(EnumSet.allOf(Tool.class).stream().map(Tool::getMaterial).toList());
