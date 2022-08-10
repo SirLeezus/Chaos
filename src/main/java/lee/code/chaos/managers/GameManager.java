@@ -143,26 +143,26 @@ public class GameManager {
 
     public void loadPlayerDefaults(Player player) {
         player.getInventory().clear();
+        for (PotionEffect potionEffect : player.getActivePotionEffects()) player.removePotionEffect(potionEffect.getType());
         player.setGameMode(GameMode.SURVIVAL);
         player.setAllowFlight(false);
         player.setFlying(false);
         player.setHealth(20);
         player.setFoodLevel(20);
         player.setFireTicks(0);
-        for (PotionEffect potionEffect : player.getActivePotionEffects()) player.removePotionEffect(potionEffect.getType());
         loadKit(player);
         loadArmor(player);
     }
 
     public void loadSpectatorDefaults(Player player) {
         player.getInventory().clear();
+        for (PotionEffect potionEffect : player.getActivePotionEffects()) player.removePotionEffect(potionEffect.getType());
         player.setGameMode(GameMode.ADVENTURE);
         player.setAllowFlight(true);
         player.setFlying(true);
         player.setHealth(20);
         player.setFoodLevel(20);
         player.setFireTicks(0);
-        for (PotionEffect potionEffect : player.getActivePotionEffects()) player.removePotionEffect(potionEffect.getType());
         loadSpectatorItems(player);
     }
 
