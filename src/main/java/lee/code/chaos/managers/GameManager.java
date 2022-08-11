@@ -1,15 +1,16 @@
 package lee.code.chaos.managers;
 
-import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import lee.code.chaos.Chaos;
 import lee.code.chaos.Data;
 import lee.code.chaos.database.CacheManager;
 import lee.code.chaos.kits.Kit;
 import lee.code.chaos.lists.*;
-import lee.code.chaos.managers.board.BoardManager;
 import lee.code.chaos.maps.MapData;
+import lee.code.chaos.maps.ScoreData;
 import lee.code.chaos.util.CountdownTimer;
 import lee.code.core.util.bukkit.BukkitUtils;
+import lee.code.core.util.bukkit.scoreboard.BoardBuilder;
+import lee.code.core.util.bukkit.scoreboard.CollisionRule;
 import lee.code.permissions.PermissionsAPI;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -385,50 +386,51 @@ public class GameManager {
     public void updateDisplayName(Player player, GameTeam team, boolean delayed) {
         UUID uuid = player.getUniqueId();
         Chaos plugin = Chaos.getPlugin();
-        Data data = plugin.getData();
-        BoardManager boardManager = data.hasBoard(uuid) ? data.getBoardPacket(uuid) : new BoardManager(uuid);
+
+        BoardBuilder boardBuilder = new BoardBuilder(player);
         String level = plugin.getCacheManager().getDisplayLevel(uuid);
+        String prefix = "&6[&a" + level + "&6] ";
+        prefix = PermissionsAPI.hasRank(uuid) ? prefix + Rank.valueOf(PermissionsAPI.getRank(uuid)).getPrefix() + " " : prefix;
+        boardBuilder.collisionRule(CollisionRule.NEVER);
+        boardBuilder.heathDisplay(true);
+        boardBuilder.sidebarDisplay(true);
+        boardBuilder.delayedSend(delayed);
+        boardBuilder.sideBarTitle(Lang.SIDEBAR_TITLE.getString(null));
+        boardBuilder.sidebar(getScoreboard(uuid));
         switch (team) {
             case RED -> {
-                boardManager.setTeamName("R" + data.getTeamNumber());
-                boardManager.setColor(ChatColor.RED);
-                String prefix = "&6[&a" + level + "&6] &c";
-                if (PermissionsAPI.hasRank(uuid)) prefix = prefix + Rank.valueOf(PermissionsAPI.getRank(uuid)).getPrefix() + " &c";
-                player.displayName(BukkitUtils.parseColorComponent( prefix + player.getName()));
-                player.playerListName(BukkitUtils.parseColorComponent( prefix + player.getName()));
+                boardBuilder.priority("R");
+                boardBuilder.nameColor(ChatColor.RED);
+                boardBuilder.prefix(prefix);
             }
             case BLUE -> {
-                boardManager.setTeamName("B" + data.getTeamNumber());
-                boardManager.setColor(ChatColor.BLUE);
-                String prefix = "&6[&a" + level + "&6] &9";
-                if (PermissionsAPI.hasRank(uuid)) prefix = prefix + Rank.valueOf(PermissionsAPI.getRank(uuid)).getPrefix() + " &9";
-                player.displayName(BukkitUtils.parseColorComponent( prefix + player.getName()));
-                player.playerListName(BukkitUtils.parseColorComponent( prefix + player.getName()));
+                boardBuilder.priority("B");
+                boardBuilder.nameColor(ChatColor.BLUE);
+                boardBuilder.prefix(prefix);
             }
             case SPECTATOR -> {
-                boardManager.setTeamName("S" + data.getTeamNumber());
-                boardManager.setColor(ChatColor.YELLOW);
-                String prefix = "&6[&a" + level + "&6] &e";
-                if (PermissionsAPI.hasRank(uuid)) prefix = prefix + Rank.valueOf(PermissionsAPI.getRank(uuid)).getPrefix() + " &e";
-                player.displayName(BukkitUtils.parseColorComponent(prefix + player.getName()));
-                player.playerListName(BukkitUtils.parseColorComponent( prefix + player.getName()));
+                boardBuilder.priority("S");
+                boardBuilder.nameColor(ChatColor.YELLOW);
+                boardBuilder.prefix(prefix);
             }
         }
-        boardManager.setCollisionRule(CollisionRule.NEVER);
-        data.setTeamNumber(data.getTeamNumber() + 1);
-        String prefix = "&6[&a" + level + "&6] ";
-        if (PermissionsAPI.hasRank(uuid)) prefix = prefix + Rank.valueOf(PermissionsAPI.getRank(uuid)).getPrefix() + " ";
-        boardManager.setPrefix(WrappedChatComponent.fromJson(BukkitUtils.serializeColorComponentJson(prefix)));
-        boardManager.setPlayers(Collections.singletonList(player.getName()));
-        data.setBoardPacket(uuid, boardManager);
-        if (delayed) {
-            Bukkit.getServer().getScheduler().runTaskLater(plugin, () -> {
-                boardManager.broadcastPacket();
-                boardManager.sendSidebarPacket();
-            }, 20L);
-        } else {
-            boardManager.broadcastPacket();
-            boardManager.sendSidebarPacket();
-        }
+        if (BukkitUtils.hasBoard(uuid)) boardBuilder.update();
+        else boardBuilder.create();
+    }
+
+    private HashMap<Integer, String> getScoreboard(UUID uuid) {
+        Data data = Chaos.getPlugin().getData();
+        HashMap<Integer, String> board = new HashMap<>();
+        ScoreData scoreData = data.getPlayerScoreData(uuid);
+        MapData mapData = data.getActiveMap().getData();
+        board.put(1, Lang.SCOREBOARD_LINE_1.getString(null));
+        board.put(2, Lang.SCOREBOARD_LINE_2.getString(new String[] { String.valueOf(Setting.WIN_SCORE.getValue() - mapData.getRedScore()), String.valueOf(Setting.WIN_SCORE.getValue()) } ));
+        board.put(3, Lang.SCOREBOARD_LINE_3.getString(new String[] { String.valueOf(Setting.WIN_SCORE.getValue() - mapData.getBlueScore()),  String.valueOf(Setting.WIN_SCORE.getValue()) } ));
+        board.put(4, Lang.SCOREBOARD_LINE_4.getString(null));
+        board.put(5, Lang.SCOREBOARD_LINE_5.getString(new String[] { String.valueOf(scoreData.getDeaths()) } ));
+        board.put(6, Lang.SCOREBOARD_LINE_6.getString(new String[] { String.valueOf(scoreData.getKillStreak()) } ));
+        board.put(7, Lang.SCOREBOARD_LINE_7.getString(new String[] { String.valueOf(scoreData.getKills()) } ));
+        board.put(8, Lang.SCOREBOARD_LINE_8.getString(null));
+        return board;
     }
 }

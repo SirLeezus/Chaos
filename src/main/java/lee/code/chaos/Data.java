@@ -8,9 +8,9 @@ import lee.code.chaos.kits.kit.*;
 import lee.code.chaos.lists.GameState;
 import lee.code.chaos.lists.Lang;
 import lee.code.chaos.lists.Rank;
+import lee.code.chaos.lists.Setting;
 import lee.code.chaos.managers.GameManager;
 import lee.code.chaos.managers.WorldManager;
-import lee.code.chaos.managers.board.BoardManager;
 import lee.code.chaos.maps.Map;
 import lee.code.chaos.maps.MapData;
 import lee.code.chaos.maps.ScoreData;
@@ -27,7 +27,6 @@ import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.*;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.*;
 
 import java.io.File;
@@ -53,8 +52,6 @@ public class Data {
     private final ConcurrentHashMap<Location, UUID> blockOwner = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, UUID> entityOwner = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, PlayerMU> playerMUList = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<UUID, BoardManager> activeBoardPackets = new ConcurrentHashMap<>();
-    private final ConcurrentHashMap<UUID, Double> playerHeathTracker = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, UUID> lastPlayerDamage = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, ScoreData> playerScore = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<UUID, UUID> lastReplier = new ConcurrentHashMap<>();
@@ -93,14 +90,6 @@ public class Data {
         return entityOwner.containsKey(entity);
     }
 
-    public void setBoardPacket(UUID player, BoardManager boardManager) { activeBoardPackets.put(player, boardManager); }
-    public BoardManager getBoardPacket(UUID player) {
-        return activeBoardPackets.get(player);
-    }
-    public List<BoardManager> getBoardPackets() { return activeBoardPackets.values().stream().toList();}
-    public void removeBoard(UUID uuid) { activeBoardPackets.get(uuid); }
-    public boolean hasBoard(UUID uuid) { return activeBoardPackets.containsKey(uuid); }
-
     public void setLastPlayerDamage(UUID uuid, UUID attacker) { lastPlayerDamage.put(uuid, attacker);}
     public UUID getLastPlayerDamage(UUID uuid) { return lastPlayerDamage.getOrDefault(uuid, UUID.fromString(Lang.SERVER_UUID.getString(null))); }
     public void removeLastPlayerDamage(UUID uuid) { lastPlayerDamage.remove(uuid); }
@@ -136,7 +125,8 @@ public class Data {
         cacheManager.setLevel(uuid, cacheManager.getLevel(uuid) + 200);
         cacheManager.setCoins(uuid, coins);
         if (scoreData.getKillStreak() > cacheManager.getLongestKillStreak(uuid)) cacheManager.setLongestKillStreak(uuid, scoreData.getKillStreak());
-        activeBoardPackets.get(uuid).sendSidebarPacket();
+        BukkitUtils.getBoard(uuid).sendSidebarLinePacket(7, Lang.SCOREBOARD_LINE_7.getString(new String[] { String.valueOf(scoreData.getKills()) }));
+        BukkitUtils.getBoard(uuid).sendSidebarLinePacket(6, Lang.SCOREBOARD_LINE_6.getString(new String[] { String.valueOf(scoreData.getKillStreak()) }));
     }
     public void addPlayerDeath(UUID uuid) {
         CacheManager cacheManager = Chaos.getPlugin().getCacheManager();
@@ -144,9 +134,11 @@ public class Data {
         scoreData.setDeaths(scoreData.getDeaths() + 1);
         scoreData.setKillStreak(0);
         cacheManager.setDeaths(uuid, cacheManager.getDeaths(uuid) + 1);
-        activeBoardPackets.get(uuid).sendSidebarPacket();
+        BukkitUtils.getBoard(uuid).sendSidebarLinePacket(5, Lang.SCOREBOARD_LINE_5.getString(new String[] { String.valueOf(scoreData.getDeaths()) }));
     }
-    public void resetPlayerScores() { playerScore.clear(); }
+    public void resetPlayerScores() {
+        playerScore.clear();
+    }
     public void addBluePoint(UUID uuid) {
         CacheManager cacheManager = Chaos.getPlugin().getCacheManager();
         long coins = cacheManager.getCoins(uuid) + 10;
@@ -159,7 +151,7 @@ public class Data {
         cacheManager.setWoolBroken(uuid, cacheManager.getWoolBroken(uuid) + 1);
         cacheManager.setLevel(uuid, cacheManager.getLevel(uuid) + 500);
         cacheManager.setCoins(uuid, coins);
-        activeBoardPackets.get(uuid).broadcastSidebarPacket();
+        BukkitUtils.getBoard(uuid).broadcastSidebarLinePacket(3, Lang.SCOREBOARD_LINE_3.getString(new String[] { String.valueOf((Setting.WIN_SCORE.getValue() - activeMap.getData().getBlueScore())), String.valueOf(Setting.WIN_SCORE.getValue()) } ));
     }
     public void addRedPoint(UUID uuid) {
         CacheManager cacheManager = Chaos.getPlugin().getCacheManager();
@@ -173,15 +165,8 @@ public class Data {
         cacheManager.setWoolBroken(uuid, cacheManager.getWoolBroken(uuid) + 1);
         cacheManager.setLevel(uuid, cacheManager.getLevel(uuid) + 500);
         cacheManager.setCoins(uuid, coins);
-        activeBoardPackets.get(uuid).broadcastSidebarPacket();
+        BukkitUtils.getBoard(uuid).broadcastSidebarLinePacket(2, Lang.SCOREBOARD_LINE_2.getString(new String[] { String.valueOf((Setting.WIN_SCORE.getValue() - activeMap.getData().getRedScore())),  String.valueOf(Setting.WIN_SCORE.getValue()) } ));
     }
-
-    public void setHeathTracker(UUID uuid, double amount) { playerHeathTracker.put(uuid, amount); }
-    public double getHeathTracker(UUID uuid) {
-        if (!playerHeathTracker.containsKey(uuid)) playerHeathTracker.put(uuid, 0.0);
-        return playerHeathTracker.get(uuid);
-    }
-    public void removeHeathTracker(UUID uuid) { playerHeathTracker.remove(uuid); }
 
     public PlayerMU getPlayerMU(UUID uuid) {
         if (playerMUList.containsKey(uuid)) {
@@ -197,7 +182,6 @@ public class Data {
         loadData();
         loadNextMap(true);
         scheduleTabListUpdater();
-        scheduleHeathChecker();
 
         //rank keys
         rankKeys.addAll(EnumSet.allOf(Rank.class).stream().map(Rank::name).toList());
@@ -371,21 +355,5 @@ public class Data {
                 getServer().sendPlayerListHeaderAndFooter(Lang.TABLIST_HEADER.getComponent(null), Lang.TABLIST_FOOTER.getComponent(new String[] { String.valueOf(map.getRedTeam().size()), String.valueOf(map.getBlueTeam().size()), String.valueOf(map.getSpectators().size()) }));
             }
         }, 10, 40);
-    }
-
-    private void scheduleHeathChecker() {
-        Chaos plugin = Chaos.getPlugin();
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            if (!Bukkit.getOnlinePlayers().isEmpty()) {
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    UUID uuid = player.getUniqueId();
-                    double health = player.getAbsorptionAmount() + player.getHealth();
-                    if (getHeathTracker(uuid) != health && hasBoard(uuid)) {
-                        setHeathTracker(uuid, health);
-                        getBoardPacket(uuid).updateHeath();
-                    }
-                }
-            }
-        }), 1L, 1L);
     }
 }

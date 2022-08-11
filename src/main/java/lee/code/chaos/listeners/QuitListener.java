@@ -36,10 +36,6 @@ public class QuitListener implements Listener {
         map.getRedTeam().remove(uuid);
         map.getBlueTeam().remove(uuid);
 
-        //remove board packet & heath tracker
-        data.removeBoard(uuid);
-        data.removeHeathTracker(uuid);
-
         //disable quit message
         e.quitMessage(null);
 

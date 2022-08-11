@@ -6,9 +6,7 @@ import lee.code.chaos.database.CacheManager;
 import lee.code.chaos.database.tables.PlayerTable;
 import lee.code.chaos.lists.GameTeam;
 import lee.code.chaos.managers.GameManager;
-import lee.code.chaos.managers.board.BoardManager;
 import lee.code.chaos.maps.MapData;
-import lee.code.permissions.PermissionsAPI;
 import net.kyori.adventure.text.Component;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -57,7 +55,6 @@ public class JoinListener implements Listener {
 
         //update displayname
         gameManager.updateDisplayName(player, GameTeam.SPECTATOR, true);
-        for (BoardManager board : data.getBoardPackets()) board.sendPacket(player);
 
         //teleport
         player.teleportAsync(map.getSpawn()).thenAccept(result -> {

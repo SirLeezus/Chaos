@@ -2,7 +2,7 @@ name: Chaos
 version: '${project.version}'
 main: lee.code.chaos.Chaos
 api-version: 1.19
-depend: [GoldmanCore, PermissionManager, ProtocolLib]
+depend: [GoldmanCore, PermissionManager]
 commands:
   message:
     description: Message a online player.

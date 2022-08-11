@@ -9,7 +9,6 @@ import lee.code.chaos.menusystem.menus.KillStreakMenu;
 import lee.code.chaos.menusystem.menus.KitMenu;
 import lee.code.chaos.menusystem.menus.TeamMenu;
 import lee.code.core.util.bukkit.BukkitUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -72,7 +71,7 @@ public class SpectatorListener implements Listener {
     }
 
     @EventHandler
-    public void onHangingEntityBreak(HangingBreakByEntityEvent e) {
+    public void onSpectatorHangingEntityBreak(HangingBreakByEntityEvent e) {
         if (e.getRemover() instanceof Player player) {
             Data data = Chaos.getPlugin().getData();
             MapData map = data.getActiveMap().getData();

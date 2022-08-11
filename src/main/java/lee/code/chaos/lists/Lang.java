@@ -4,11 +4,10 @@ import lee.code.core.util.bukkit.BukkitUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
 
 @AllArgsConstructor
 public enum Lang {
-    SIDEBAR_TITLE("&#FFAA00&lChaos Score"),
+    SIDEBAR_TITLE("&6&lChaos Score"),
     MESSAGE_SENT("&6[{0}You &6-> &e{1}{2}&6] "),
     MESSAGE_RECEIVED("&6[&e{0}{1} &6-> {2}You&6] "),
     MOTD_SPLITTER("&2▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬"),
@@ -111,16 +110,23 @@ public enum Lang {
     COMMAND_BOOSTER_SPLITTER("&a-------------------------------------------------"),
     COMMAND_BOOSTER_REMOVE_SUCCESSFUL("&aThe booster id &9{0} &awas successfully removed."),
     COMMAND_COINS_SUCCESSFUL("&aThe player &6{0} &ahas &#f5a802{1} ⛃&a!"),
+    SCOREBOARD_LINE_1("&r&2---------------"),
+    SCOREBOARD_LINE_2("&9Blue Wool&8: &9({0}/{1})"),
+    SCOREBOARD_LINE_3("&cRed Wool&8: &c({0}/{1})"),
+    SCOREBOARD_LINE_4("&2---------------"),
+    SCOREBOARD_LINE_5("&eDeaths&8: &a{0}"),
+    SCOREBOARD_LINE_6("&eKill Streak&8: &a{0}"),
+    SCOREBOARD_LINE_7("&eKills&8: &a{0}"),
+    SCOREBOARD_LINE_8("&2---------------&r"),
     ;
 
     @Getter private final String string;
 
     public String getString(String[] variables) {
-        String value = ChatColor.translateAlternateColorCodes('&', string);
-        if (variables == null) return value;
-        else if (variables.length == 0) return value;
+        String value = string;
+        if (variables == null || variables.length == 0) return BukkitUtils.parseColorString(value);
         for (int i = 0; i < variables.length; i++) value = value.replace("{" + i + "}", variables[i]);
-        return ChatColor.translateAlternateColorCodes('&', value);
+        return BukkitUtils.parseColorString(value);
     }
 
     public Component getComponent(String[] variables) {
