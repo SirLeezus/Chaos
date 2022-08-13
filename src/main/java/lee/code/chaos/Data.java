@@ -194,6 +194,7 @@ public class Data {
         motd.add(Component.text(""));
         motd.add(Lang.DISCORD.getComponent(null).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, Lang.DISCORD_LINK.getString(null))));
         motd.add(Lang.STORE.getComponent(null).clickEvent(ClickEvent.clickEvent(ClickEvent.Action.OPEN_URL, Lang.STORE_LINK.getString(null))));
+        motd.add(Lang.DIRECT_IP.getComponent(null));
         motd.add(Component.text(""));
         motd.add(Lang.MOTD_SPLITTER.getComponent(null));
 
