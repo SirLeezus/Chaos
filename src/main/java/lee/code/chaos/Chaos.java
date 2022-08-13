@@ -44,7 +44,7 @@ public class Chaos extends JavaPlugin {
     @Override
     public void onDisable() {
         databaseManager.closeConnection();
-        BukkitUtils.kickOnlinePlayers(Lang.RESTART_MESSAGE.getComponent(null));
+        for (Player player : Bukkit.getOnlinePlayers()) BukkitUtils.sendPlayerServer(player, "hub");
         Bukkit.unloadWorld(data.getActiveMap().name(), false);
         worldManager.deleteWorldFolder(new File("./" + data.getActiveMap().name()));
     }
