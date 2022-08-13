@@ -9,6 +9,7 @@ import lee.code.chaos.menusystem.menus.KillStreakMenu;
 import lee.code.chaos.menusystem.menus.KitMenu;
 import lee.code.chaos.menusystem.menus.TeamMenu;
 import lee.code.core.util.bukkit.BukkitUtils;
+import org.bukkit.GameMode;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -158,6 +159,15 @@ public class SpectatorListener implements Listener {
             if (map.getSpectators().contains(player.getUniqueId()) || data.getGameState().equals(GameState.TRANSITIONING)) {
                 e.setCancelled(true);
             }
+        }
+    }
+
+    @EventHandler
+    public void onSpectatorPlayerSwapHandItems(PlayerSwapHandItemsEvent e) {
+        Data data = Chaos.getPlugin().getData();
+        MapData map = data.getActiveMap().getData();
+        if (map.getSpectators().contains(e.getPlayer().getUniqueId()) || data.getGameState().equals(GameState.TRANSITIONING)) {
+            e.setCancelled(true);
         }
     }
 
