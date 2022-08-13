@@ -22,6 +22,7 @@ import lee.code.chaos.menusystem.PlayerMU;
 import lee.code.chaos.recipes.Tool;
 import lee.code.chaos.recipes.CraftingRecipe;
 import lee.code.core.util.bukkit.BukkitUtils;
+import lee.code.core.util.bukkit.scoreboard.BoardManager;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
@@ -44,6 +45,8 @@ public class Data {
     @Setter @Getter private GameState gameState;
     @Getter @Setter private int teamNumber = 0;
 
+    @Getter private final List<UUID> droppingTNT = new ArrayList<>();
+    @Getter private final List<UUID> droppingFireCharge = new ArrayList<>();
     @Getter private final List<NamespacedKey> recipeKeys = new ArrayList<>();
     @Getter private final List<String> rankKeys = new ArrayList<>();
     @Getter private final List<String> premiumRankKeys = new ArrayList<>();
@@ -58,6 +61,26 @@ public class Data {
     private final LinkedHashMap<String, Kit> gameKits = new LinkedHashMap<>();
     private final LinkedHashMap<String, KillStreak> gameKillStreaks = new LinkedHashMap<>();
     private final ConcurrentHashMap<UUID, Integer> teamMenuTask = new ConcurrentHashMap<>();
+
+    public void addDroppingTNT(UUID uuid) {
+        droppingTNT.add(uuid);
+    }
+    public void removeDroppingTNT(UUID uuid) {
+        droppingTNT.remove(uuid);
+    }
+    public boolean isDroppingTNT(UUID uuid) {
+        return droppingTNT.contains(uuid);
+    }
+
+    public void addDroppingFireCharge(UUID uuid) {
+        droppingFireCharge.add(uuid);
+    }
+    public void removeDroppingFireCharge(UUID uuid) {
+        droppingFireCharge.remove(uuid);
+    }
+    public boolean isDroppingFireCharge(UUID uuid) {
+        return droppingFireCharge.contains(uuid);
+    }
 
     public void setBlockOwner(Location location, UUID uuid) {
         blockOwner.put(location, uuid);
@@ -125,8 +148,9 @@ public class Data {
         cacheManager.setLevel(uuid, cacheManager.getLevel(uuid) + 200);
         cacheManager.setCoins(uuid, coins);
         if (scoreData.getKillStreak() > cacheManager.getLongestKillStreak(uuid)) cacheManager.setLongestKillStreak(uuid, scoreData.getKillStreak());
-        BukkitUtils.getBoard(uuid).sendSidebarLinePacket(7, Lang.SCOREBOARD_LINE_7.getString(new String[] { String.valueOf(scoreData.getKills()) }));
-        BukkitUtils.getBoard(uuid).sendSidebarLinePacket(6, Lang.SCOREBOARD_LINE_6.getString(new String[] { String.valueOf(scoreData.getKillStreak()) }));
+        BoardManager boardManager = BukkitUtils.getBoard(uuid);
+        boardManager.sendSidebarLinePacket(7, Lang.SCOREBOARD_LINE_7.getString(new String[] { String.valueOf(scoreData.getKills()) }));
+        boardManager.sendSidebarLinePacket(6, Lang.SCOREBOARD_LINE_6.getString(new String[] { String.valueOf(scoreData.getKillStreak()) }));
     }
     public void addPlayerDeath(UUID uuid) {
         CacheManager cacheManager = Chaos.getPlugin().getCacheManager();
@@ -134,7 +158,9 @@ public class Data {
         scoreData.setDeaths(scoreData.getDeaths() + 1);
         scoreData.setKillStreak(0);
         cacheManager.setDeaths(uuid, cacheManager.getDeaths(uuid) + 1);
-        BukkitUtils.getBoard(uuid).sendSidebarLinePacket(5, Lang.SCOREBOARD_LINE_5.getString(new String[] { String.valueOf(scoreData.getDeaths()) }));
+        BoardManager boardManager = BukkitUtils.getBoard(uuid);
+        boardManager.sendSidebarLinePacket(5, Lang.SCOREBOARD_LINE_5.getString(new String[] { String.valueOf(scoreData.getDeaths()) }));
+        boardManager.sendSidebarLinePacket(6, Lang.SCOREBOARD_LINE_6.getString(new String[] { String.valueOf(scoreData.getKillStreak()) }));
     }
     public void resetPlayerScores() {
         playerScore.clear();

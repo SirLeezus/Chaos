@@ -17,6 +17,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -44,17 +45,33 @@ public class KitListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onKitItemDrop(PlayerDropItemEvent e) {
+        if (e.getItemDrop().getType().equals(EntityType.DROPPED_ITEM)) {
+            if (e.getItemDrop().getItemStack().getType().equals(Material.TNT)) {
+                Chaos.getPlugin().getData().addDroppingTNT(e.getPlayer().getUniqueId());
+            } else if (e.getItemDrop().getItemStack().getType().equals(Material.FIRE_CHARGE)) {
+                Chaos.getPlugin().getData().addDroppingFireCharge(e.getPlayer().getUniqueId());
+            }
+        }
+    }
+
     @EventHandler (priority = EventPriority.HIGHEST)
     public void onTNTThrow(PlayerInteractEvent e) {
         Data data = Chaos.getPlugin().getData();
         if (data.getGameState().equals(GameState.ACTIVE)) {
             Player player = e.getPlayer();
+            UUID uuid = player.getUniqueId();
             ItemStack handItem = player.getInventory().getItemInMainHand();
+            if (data.isDroppingTNT(uuid)) {
+                data.removeDroppingTNT(uuid);
+                return;
+            }
             if (handItem.getType().equals(Material.TNT) && e.getAction().isLeftClick()) {
                 if (BukkitUtils.hasClickDelay(player)) return;
                 e.setCancelled(true);
                 FallingBlock tnt = player.getWorld().spawnFallingBlock(player.getEyeLocation(), Material.TNT.createBlockData());
-                data.setEntityOwner(tnt.getUniqueId(), player.getUniqueId());
+                data.setEntityOwner(tnt.getUniqueId(),uuid);
                 tnt.setVelocity(player.getLocation().getDirection().multiply(1.1));
                 BukkitUtils.removePlayerItems(player, handItem, 1, true);
             }
@@ -125,7 +142,11 @@ public class KitListener implements Listener {
         if (data.getGameState().equals(GameState.ACTIVE)) {
             Player player = e.getPlayer();
             UUID uuid = player.getUniqueId();
-            if (e.getAction().isLeftClick() && player.getInventory().getItemInMainHand().getType().equals(Material.FIRE_CHARGE)) {
+            if (data.isDroppingFireCharge(uuid)) {
+                data.removeDroppingFireCharge(uuid);
+                return;
+            }
+            if (player.getInventory().getItemInMainHand().getType().equals(Material.FIRE_CHARGE) && e.getAction().isLeftClick()) {
                 e.setCancelled(true);
                 if (BukkitUtils.hasClickDelay(player)) return;
                 BukkitUtils.removePlayerItems(player, new ItemStack(Material.FIRE_CHARGE), 1, true);
