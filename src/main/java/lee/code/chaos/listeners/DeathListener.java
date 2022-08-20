@@ -62,10 +62,12 @@ public class DeathListener implements Listener {
         if (!e.isCancelled()) {
             Data data = Chaos.getPlugin().getData();
             MapData map = data.getActiveMap().getData();
+
             if (e.getEntity() instanceof Player player) {
                 UUID uuid = player.getUniqueId();
                 if (!map.getSpectators().contains(uuid)) {
-                    if (map.getTeam(data.getLastPlayerDamage(uuid)).equals(map.getTeam(uuid))) {
+                    GameTeam lastHitTeam = map.getTeam(data.getLastPlayerDamage(uuid));
+                    if (lastHitTeam.equals(map.getTeam(uuid)) || lastHitTeam.equals(GameTeam.SPECTATOR)) {
                         data.removeLastPlayerDamage(uuid);
                         e.setCancelled(true);
                         return;

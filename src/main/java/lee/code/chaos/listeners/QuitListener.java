@@ -32,9 +32,9 @@ public class QuitListener implements Listener {
         }
 
         //remove from teams
-        map.getSpectators().remove(uuid);
-        map.getRedTeam().remove(uuid);
-        map.getBlueTeam().remove(uuid);
+        map.removeSpectator(uuid);
+        map.removeBlueTeam(uuid);
+        map.removeSpectator(uuid);
 
         //disable quit message
         e.quitMessage(null);
