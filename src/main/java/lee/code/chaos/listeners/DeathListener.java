@@ -68,9 +68,11 @@ public class DeathListener implements Listener {
                 if (!map.getSpectators().contains(uuid)) {
                     GameTeam lastHitTeam = map.getTeam(data.getLastPlayerDamage(uuid));
                     if (lastHitTeam.equals(map.getTeam(uuid)) || lastHitTeam.equals(GameTeam.SPECTATOR)) {
-                        data.removeLastPlayerDamage(uuid);
-                        e.setCancelled(true);
-                        return;
+                        if (!e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
+                            data.removeLastPlayerDamage(uuid);
+                            e.setCancelled(true);
+                            return;
+                        }
                     }
                     if (e.getDamage() >= player.getHealth() && !e.getCause().equals(EntityDamageEvent.DamageCause.VOID)) {
                         if (!player.getInventory().contains(new ItemStack(Material.TOTEM_OF_UNDYING))) {
